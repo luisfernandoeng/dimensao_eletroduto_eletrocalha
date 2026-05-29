@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dimensionamento — Eletrodutos & Eletrocalhas | NBR 5410 / 5444</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d0f;
+    --panel: #121619;
+    --panel-2: #181d22;
+    --line: #232a31;
+    --line-soft: #1c2229;
+    --ink: #e8ebed;
+    --ink-dim: #8a949c;
+    --ink-mute: #5a6470;
+    --accent: #d4ff3a;     /* lime — instrumento, leitura ativa */
+    --accent-2: #ff6b3a;   /* alerta */
+    --ok: #6bd96b;
+    --warn: #ffc54a;
+    --err: #ff5a5a;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; }
+  body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(212,255,58,0.04), transparent 60%),
+      radial-gradient(800px 400px at -10% 30%, rgba(255,107,58,0.03), transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    border-bottom: 1px solid var(--line);
+    padding: 28px 40px 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  }
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .brand-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 44px);
+    margin: 0;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .header-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-align: right;
+    letter-spacing: 0.05em;
+  }
+  .header-meta div + div { margin-top: 4px; }
+  .header-meta span { color: var(--ink-dim); }
+
+  /* ===== LAYOUT ===== */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 40px 80px;
+  }
+  .grid-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 980px) {
+    .grid-main { grid-template-columns: 1fr; }
+    .header, .container { padding-left: 20px; padding-right: 20px; }
+    .header-grid { grid-template-columns: 1fr; }
+    .header-meta { text-align: left; }
+  }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab {
+    background: none;
+    border: none;
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 14px 22px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.18s ease;
+    position: relative;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab-num {
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-right: 6px;
+  }
+  .tab.active .tab-num { color: var(--accent); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fade 0.3s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ===== PANEL ===== */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .panel-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel-2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .panel-title strong { color: var(--ink); }
+  .panel-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+  }
+  .panel-body { padding: 20px; }
+
+  /* ===== TABLE INPUT ===== */
+  .cable-section {
+    margin-bottom: 22px;
+  }
+  .cable-section:last-child { margin-bottom: 0; }
+  .cable-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--line-soft);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .dot.epr { background: var(--accent-2); box-shadow: 0 0 8px var(--accent-2); }
+  .dot.sys { background: #6bb6ff; box-shadow: 0 0 8px #6bb6ff; }
+
+  .cable-row {
+    display: grid;
+    grid-template-columns: 1fr 70px 90px;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+  }
+  .cable-row:last-child { border-bottom: none; }
+  .cable-name { color: var(--ink); }
+  .cable-diam {
+    color: var(--ink-mute);
+    text-align: right;
+    font-size: 11px;
+  }
+  .cable-diam::after { content: ' mm'; }
+
+  input[type="number"] {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 6px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    width: 100%;
+    border-radius: 2px;
+    text-align: center;
+    transition: all 0.15s ease;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: rgba(212,255,58,0.04);
+  }
+  input[type="number"]:not([value="0"]):not(:placeholder-shown) {
+    border-color: rgba(212,255,58,0.4);
+  }
+
+  /* ===== RESULTS ===== */
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .readout {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 14px 16px;
+    border-radius: 3px;
+  }
+  .readout-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .readout-value {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .readout-value.muted { color: var(--ink-dim); }
+  .readout-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-left: 4px;
+    font-weight: 400;
+  }
+  .readout-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+  }
+
+  .result-commercial {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(212,255,58,0.08), rgba(212,255,58,0.02));
+    border: 1px solid rgba(212,255,58,0.3);
+    padding: 22px 24px;
+    border-radius: 3px;
+  }
+  .result-commercial .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .result-commercial-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 18px;
+    align-items: stretch;
+  }
+  .result-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .result-cell + .result-cell {
+    border-left: 1px solid rgba(212,255,58,0.15);
+    padding-left: 18px;
+  }
+  .result-cell-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .result-cell-value {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .result-cell-value.primary {
+    color: var(--accent);
+    font-size: 48px;
+  }
+  .result-cell-value.primary sup {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0;
+    margin-left: 4px;
+    vertical-align: top;
+    position: relative;
+    top: 4px;
+  }
+  .result-cell-unit {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+    letter-spacing: 0.08em;
+  }
+  .result-cell-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .result-commercial.empty {
+    opacity: 0.45;
+  }
+  .result-commercial.empty .result-cell-value { color: var(--ink-mute); }
+  @media (max-width: 600px) {
+    .result-commercial-grid { grid-template-columns: 1fr; }
+    .result-cell + .result-cell { border-left: none; border-top: 1px solid rgba(212,255,58,0.15); padding-left: 0; padding-top: 14px; }
+  }
+
+  /* ===== FILL BAR ===== */
+  .fill-section {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .fill-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .fill-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .fill-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ok);
+  }
+  .fill-value.warn { color: var(--warn); }
+  .fill-value.err { color: var(--err); }
+  .fill-bar {
+    height: 6px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .fill-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--ok);
+    transition: width 0.4s ease, background 0.2s ease;
+  }
+  .fill-bar-fill.warn { background: var(--warn); }
+  .fill-bar-fill.err { background: var(--err); }
+  .fill-bar-limit {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    width: 1px;
+    background: var(--accent);
+  }
+  .fill-foot {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-top: 6px;
+  }
+
+  /* ===== MATERIAL SELECTOR ===== */
+  .mat-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .mat-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .mat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--mat-color, var(--accent));
+    opacity: 0;
+    transition: opacity 0.18s ease;
+    pointer-events: none;
+  }
+  .mat-card:hover { border-color: var(--mat-color, var(--accent)); }
+  .mat-card:hover::before { opacity: 0.05; }
+  .mat-card.active {
+    border-color: var(--mat-color, var(--accent));
+    background: var(--panel-2);
+  }
+  .mat-card.active::before { opacity: 0.08; }
+  .mat-card-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    position: relative;
+  }
+  .mat-card-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mat-color, var(--accent));
+    box-shadow: 0 0 8px var(--mat-color, var(--accent));
+  }
+  .mat-card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .mat-card.active .mat-card-name { color: var(--mat-color, var(--accent)); }
+  .mat-card-norma {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+    position: relative;
+  }
+  .mat-card-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mat-card.active .mat-card-check {
+    background: var(--mat-color, var(--accent));
+    border-color: var(--mat-color, var(--accent));
+  }
+  .mat-card.active .mat-card-check::after {
+    content: '';
+    width: 4px;
+    height: 7px;
+    border: solid var(--bg);
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  @media (max-width: 600px) { .mat-selector { grid-template-columns: 1fr; } }
+
+  /* ===== MARGIN INDICATOR ===== */
+  .margin-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: rgba(212,255,58,0.04);
+    border: 1px solid rgba(212,255,58,0.15);
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .margin-row-label {
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+  .margin-row-value {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== TRAY SIZE CARD ===== */
+  .tray-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .tray-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .tray-card:hover {
+    border-color: var(--accent);
+    background: rgba(212,255,58,0.04);
+  }
+  .tray-card.selected {
+    border-color: var(--accent);
+    background: rgba(212,255,58,0.08);
+  }
+  .tray-card-size {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .tray-card-area {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+  .tray-card-fill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ok);
+    margin-top: 6px;
+  }
+  .tray-card-fill.warn { color: var(--warn); }
+  .tray-card-fill.err { color: var(--err); }
+  .tray-card.unfit { opacity: 0.35; }
+
+  /* ===== REFERENCES PANEL ===== */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .ref-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .ref-card-img {
+    aspect-ratio: 4/3;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .ref-card-img svg { width: 100%; height: 100%; }
+  .ref-card-body { padding: 14px 16px; }
+  .ref-card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .ref-card-desc {
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    line-height: 1.5;
+  }
+  @media (max-width: 780px) {
+    .ref-grid { grid-template-columns: 1fr; }
+    .tray-grid { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== METHODOLOGY ===== */
+  .method {
+    margin-top: 28px;
+    padding: 22px 24px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+  }
+  .method h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 780px) { .method-grid { grid-template-columns: 1fr; } }
+  .method-block h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    margin: 0 0 8px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .method-block p {
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin: 0 0 8px;
+    line-height: 1.6;
+  }
+  .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    border-radius: 3px;
+    color: var(--accent);
+    margin: 8px 0;
+    overflow-x: auto;
+  }
+  .nbr-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: rgba(212,255,58,0.08);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid rgba(212,255,58,0.2);
+    margin-right: 4px;
+  }
+
+  /* ===== ACTION BAR ===== */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .btn {
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s ease;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .btn.primary:hover { background: #bfeb2e; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    margin-top: 60px;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+  }
+  footer a { color: var(--ink-dim); text-decoration: none; }
+
+  /* tiny scrollbars */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ink-mute); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-grid">
+    <div>
+      <div class="brand-tag">◆ Calculadora de Infraestrutura Elétrica · LF Labs</div>
+      <h1>Dimensionamento de <em>Eletrodutos</em> &amp; <em>Eletrocalhas</em></h1>
+    </div>
+    <div class="header-meta">
+      <div><span>NORMAS</span> &nbsp; NBR 5410 · 5444 · 15715 · 5597</div>
+      <div><span>MARGEM</span> &nbsp; +10% sobre Ø calculado</div>
+      <div><span>MATERIAIS</span> &nbsp; PVC · PEAD · Aço Galvanizado</div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- TABS -->
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="eletroduto"><span class="tab-num">01</span>Eletroduto · Energia</button>
+    <button class="tab" data-tab="sistemas"><span class="tab-num">02</span>Eletroduto · Sistemas</button>
+    <button class="tab" data-tab="eletrocalha"><span class="tab-num">03</span>Eletrocalha</button>
+    <button class="tab" data-tab="referencia"><span class="tab-num">04</span>Referência</button>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- TAB 01: ELETRODUTO ENERGIA (PVC 70°C + EPR 90°C) -->
+  <!-- ============================================== -->
+  <section class="tab-panel active" id="tab-eletroduto">
+    <div class="grid-main">
+
+      <!-- INPUTS -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><strong>Entrada</strong> · Cabos de Energia</div>
+          <div class="panel-badge">NBR 5410</div>
+        </div>
+        <div class="panel-body">
+
+          <div class="cable-section">
+            <div class="cable-section-title"><span class="dot"></span>Cabos em PVC 750V · 70°C</div>
+            <div id="cables-pvc"></div>
+          </div>
+
+          <div class="cable-section">
+            <div class="cable-section-title"><span class="dot epr"></span>Cabos EPR / XLPE · 90°C</div>
+            <div id="cables-epr"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" onclick="resetCables('energia')">Limpar</button>
+            <button class="btn" onclick="exemplo()">Exemplo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- OUTPUTS -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><strong>Resultado</strong> · Eletroduto</div>
+          <div class="panel-badge" id="energia-status">AGUARDANDO</div>
+        </div>
+        <div class="panel-body">
+
+          <div class="results-grid">
+            <div class="readout">
+              <div class="readout-label">Σ D² × n (mm²)</div>
+              <div class="readout-value muted" id="energia-soma">—</div>
+              <div class="readout-sub">Área quadrada total dos cabos</div>
+            </div>
+            <div class="readout">
+              <div class="readout-label">Diâmetro Calculado</div>
+              <div class="readout-value muted" id="energia-diam">—<span class="readout-unit">mm</span></div>
+              <div class="readout-sub">√(ΣD²·n / 0,40)</div>
+            </div>
+          </div>
+
+          <div class="margin-row">
+            <span class="margin-row-label">◆ MARGEM DE SEGURANÇA · 10%</span>
+            <span>Ø alvo mínimo: <span class="margin-row-value" id="energia-alvo">— mm</span></span>
+          </div>
+
+          <div style="margin-top: 18px;">
+            <div class="cable-section-title" style="margin-bottom: 8px;"><span class="dot"></span>Material do Eletroduto</div>
+            <div class="mat-selector" data-target="energia">
+              <div class="mat-card" data-mat="pvc" style="--mat-color: #d4ff3a;">
+                <div class="mat-card-head">
+                  <div class="mat-card-dot"></div>
+                  <div class="mat-card-name">PVC Rígido</div>
+                  <div class="mat-card-check"></div>
+                </div>
+                <div class="mat-card-norma">Tigre · Amanco · embutido</div>
+              </div>
+              <div class="mat-card" data-mat="pead" style="--mat-color: #6bb6ff;">
+                <div class="mat-card-head">
+                  <div class="mat-card-dot"></div>
+                  <div class="mat-card-name">PEAD Corrugado</div>
+                  <div class="mat-card-check"></div>
+                </div>
+                <div class="mat-card-norma">Kanaflex · subterrâneo</div>
+              </div>
+              <div class="mat-card" data-mat="galv" style="--mat-color: #ff6b3a;">
+                <div class="mat-card-head">
+                  <div class="mat-card-dot"></div>
+                  <div class="mat-card-name">Aço Galvanizado</div>
+                  <div class="mat-card-check"></div>
+                </div>
+                <div class="mat-card-norma">NBR 5597 · industrial</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-commercial empty" id="energia-comercial">
+            <div class="label">◆ Eletroduto Comercial · Especificação</div>
+            <div class="result-commercial-grid">
+              <div class="result-cell">
+                <div class="result-cell-label">Bitola (rosca)</div>
+                <div class="result-cell-value" data-field="pol">—</div>
+                <div class="result-cell-unit">polegadas · catálogo</div>
+              </div>
+              <div class="result-cell">
+                <div class="result-cell-label">DN · Diâmetro Nominal</div>
+                <div class="result-cell-value primary" data-field="dn">—<sup>mm</sup></div>
+                <div class="result-cell-unit">↳ usar no Revit</div>
+              </div>
+              <div class="result-cell">
+                <div class="result-cell-label">Especificação Técnica</div>
+                <div class="result-cell-sub" data-field="spec">
+                  Adicione cabos para calcular.<br>
+                  Conforme NBR 5444 e NBR 15465.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fill-section">
+            <div class="fill-head">
+              <div class="fill-label">Taxa de Ocupação (real, no eletroduto escolhido)</div>
+              <div class="fill-value" id="energia-fill-pct">0%</div>
+            </div>
+            <div class="fill-bar">
+              <div class="fill-bar-fill" id="energia-fill-bar"></div>
+            </div>
+            <div class="fill-foot">Escala: 0% – 40% (limite NBR 5410 para mais de 2 condutores)</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Methodology -->
+    <div class="method">
+      <h3>◆ Metodologia · Eletroduto para Cabos de Energia</h3>
+      <div class="method-grid">
+        <div class="method-block">
+          <h4>Princípio do cálculo + margem</h4>
+          <p>A NBR 5410 limita a ocupação a <strong>40%</strong> da seção transversal interna quando há mais de 2 condutores. A aproximação por área quadrada (D²) é prática e ligeiramente conservadora.</p>
+          <div class="formula">Ø_calc = √( Σ(D_cabo² × n) ÷ 0,40 )<br>Ø_alvo = Ø_calc × 1,10</div>
+          <p>A <strong style="color: var(--accent);">margem de 10%</strong> é aplicada antes de aceitar a bitola comercial — impede que um eletroduto com apenas 1 a 2 mm de folga seja selecionado, evitando dificuldade na passagem dos cabos e ocupação real próxima do limite normativo.</p>
+        </div>
+        <div class="method-block">
+          <h4>Seleção entre 3 materiais</h4>
+          <p>Use os cards de material acima para ver o resultado em <strong>PVC rígido</strong>, <strong>PEAD corrugado</strong> ou <strong>aço galvanizado</strong>. As tabelas de Ø interno diferem entre os materiais — uma bitola menor de aço pode atender o mesmo cálculo que uma bitola maior de PVC.</p>
+          <p><span class="nbr-tag">NBR 5444</span><span class="nbr-tag">NBR 15715 · PEAD</span><span class="nbr-tag">NBR 5597 · GALV.</span></p>
+          <p>O valor de <strong style="color: var(--accent);">DN</strong> exibido no card de resultado é o que entra direto nas famílias do Revit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- TAB 02: SISTEMAS (CAT5e, CAT6, CFTV, telefone) -->
+  <!-- ============================================== -->
+  <section class="tab-panel" id="tab-sistemas">
+    <div class="grid-main">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><strong>Entrada</strong> · Cabos de Sistemas</div>
+          <div class="panel-badge">SELV / PELV</div>
+        </div>
+        <div class="panel-body">
+
+          <div class="cable-section">
+            <div class="cable-section-title"><span class="dot sys"></span>Dados, Voz, CFTV, Alarme, Som</div>
+            <div id="cables-sys"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" onclick="resetCables('sistemas')">Limpar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><strong>Resultado</strong> · Eletroduto Sistemas</div>
+          <div class="panel-badge" id="sistemas-status">AGUARDANDO</div>
+        </div>
+        <div class="panel-body">
+
+          <div class="results-grid">
+            <div class="readout">
+              <div class="readout-label">Σ D² × n (mm²)</div>
+              <div class="readout-value muted" id="sistemas-soma">—</div>
+              <div class="readout-sub">Soma das áreas quadradas</div>
+            </div>
+            <div class="readout">
+              <div class="readout-label">Diâmetro Calculado</div>
+              <div class="readout-value muted" id="sistemas-diam">—<span class="readout-unit">mm</span></div>
+              <div class="readout-sub">√(ΣD²·n / 1,00)</div>
+            </div>
+          </div>
+
+          <div class="margin-row">
+            <span class="margin-row-label">◆ MARGEM DE SEGURANÇA · 10%</span>
+            <span>Ø alvo mínimo: <span class="margin-row-value" id="sistemas-alvo">— mm</span></span>
+          </div>
+
+          <div style="margin-top: 18px;">
+            <div class="cable-section-title" style="margin-bottom: 8px;"><span class="dot sys"></span>Material do Eletroduto</div>
+            <div class="mat-selector" data-target="sistemas">
+              <div class="mat-card" data-mat="pvc" style="--mat-color: #d4ff3a;">
+                <div class="mat-card-head">
+                  <div class="mat-card-dot"></div>
+                  <div class="mat-card-name">PVC Rígido</div>
+                  <div class="mat-card-check"></div>
+                </div>
+                <div class="mat-card-norma">Tigre · Amanco · embutido</div>
+              </div>
+              <div class="mat-card" data-mat="pead" style="--mat-color: #6bb6ff;">
+                <div class="mat-card-head">
+                  <div class="mat-card-dot"></div>
+                  <div class="mat-card-name">PEAD Corrugado</div>
+                  <div class="mat-card-check"></div>
+                </div>
+                <div class="mat-card-norma">Kanaflex · subterrâneo</div>
+              </div>
+              <div class="mat-card" data-mat="galv" style="--mat-color: #ff6b3a;">
+                <div class="mat-card-head">
+                  <div class="mat-card-dot"></div>
+                  <div class="mat-card-name">Aço Galvanizado</div>
+                  <div class="mat-card-check"></div>
+                </div>
+                <div class="mat-card-norma">NBR 5597 · industrial</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-commercial empty" id="sistemas-comercial">
+            <div class="label">◆ Eletroduto Comercial · Especificação</div>
+            <div class="result-commercial-grid">
+              <div class="result-cell">
+                <div class="result-cell-label">Bitola (rosca)</div>
+                <div class="result-cell-value" data-field="pol">—</div>
+                <div class="result-cell-unit">polegadas · catálogo</div>
+              </div>
+              <div class="result-cell">
+                <div class="result-cell-label">DN · Diâmetro Nominal</div>
+                <div class="result-cell-value primary" data-field="dn">—<sup>mm</sup></div>
+                <div class="result-cell-unit">↳ usar no Revit</div>
+              </div>
+              <div class="result-cell">
+                <div class="result-cell-label">Especificação Técnica</div>
+                <div class="result-cell-sub" data-field="spec">
+                  Adicione cabos para calcular.<br>
+                  Conforme NBR 5444 e NBR 15465.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fill-section">
+            <div class="fill-head">
+              <div class="fill-label">Taxa de Ocupação</div>
+              <div class="fill-value" id="sistemas-fill-pct">0%</div>
+            </div>
+            <div class="fill-bar">
+              <div class="fill-bar-fill" id="sistemas-fill-bar"></div>
+            </div>
+            <div class="fill-foot">Cabos SELV/PELV podem ocupar até 100% — recomenda-se reservar folga prática para passagem.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="method">
+      <h3>◆ Metodologia · Cabos de Sistemas (Extra-baixa Tensão)</h3>
+      <div class="method-grid">
+        <div class="method-block">
+          <h4>Por que o limite muda</h4>
+          <p>Cabos de sinal (rede, CFTV, telefonia, alarme) operam em extra-baixa tensão e não geram aquecimento significativo, eliminando a principal razão para o limite de 40% — a dissipação térmica.</p>
+          <p>O dimensionamento aqui considera fator de enchimento <strong>100%</strong>, mas a prática profissional reserva 25–40% de folga para futura ampliação e facilidade de tracionamento.</p>
+        </div>
+        <div class="method-block">
+          <h4>Sempre separe sistemas de energia</h4>
+          <p>Cabos de energia e sistemas <strong>nunca</strong> compartilham o mesmo eletroduto. A indução eletromagnética dos cabos de força gera ruído que degrada o sinal, especialmente em Cat 5e/Cat 6 e CFTV analógico.</p>
+          <p><span class="nbr-tag">NBR 14565</span><span class="nbr-tag">CABEAMENTO ESTRUTURADO</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- TAB 03: ELETROCALHA -->
+  <!-- ============================================== -->
+  <section class="tab-panel" id="tab-eletrocalha">
+    <div class="grid-main">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><strong>Entrada</strong> · Cabos para Eletrocalha</div>
+          <div class="panel-badge">40% MÁX</div>
+        </div>
+        <div class="panel-body">
+
+          <div class="cable-section">
+            <div class="cable-section-title"><span class="dot"></span>Cabos em PVC 750V · 70°C</div>
+            <div id="tray-pvc"></div>
+          </div>
+
+          <div class="cable-section">
+            <div class="cable-section-title"><span class="dot epr"></span>Cabos EPR / XLPE · 90°C</div>
+            <div id="tray-epr"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" onclick="resetCables('tray')">Limpar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><strong>Resultado</strong> · Seleção de Eletrocalha</div>
+          <div class="panel-badge" id="tray-status">AGUARDANDO</div>
+        </div>
+        <div class="panel-body">
+
+          <div class="results-grid">
+            <div class="readout">
+              <div class="readout-label">Σ D² × n (mm²)</div>
+              <div class="readout-value muted" id="tray-area">—</div>
+              <div class="readout-sub">Área ocupada pelos cabos</div>
+            </div>
+            <div class="readout">
+              <div class="readout-label">Área Mínima Útil</div>
+              <div class="readout-value muted" id="tray-minarea">—</div>
+              <div class="readout-sub">A_min = ΣD²·n ÷ 0,40</div>
+            </div>
+          </div>
+
+          <div class="fill-foot" style="margin: 16px 0 8px;">Eletrocalhas compatíveis (preenchimento ≤ 40%):</div>
+          <div class="tray-grid" id="tray-options">
+            <!-- Cards rendered by JS -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="method">
+      <h3>◆ Metodologia · Eletrocalhas</h3>
+      <div class="method-grid">
+        <div class="method-block">
+          <h4>Princípio de ocupação</h4>
+          <p>Para eletrocalhas de cabos de força, a referência amplamente adotada (Legrand, Sil, fabricantes nacionais) limita o preenchimento a <strong>40% da área útil interna</strong>, considerando a soma das áreas quadradas dos cabos (D²).</p>
+          <div class="formula">A_útil = largura × altura<br>%ocupação = (Σ D²·n) ÷ A_útil × 100</div>
+          <p>O critério D² é uma aproximação prática conservadora — usar πD²/4 reduziria a área e levaria a eletrocalhas subdimensionadas.</p>
+        </div>
+        <div class="method-block">
+          <h4>Cabos de controle e dimensionamento térmico</h4>
+          <p>Para cabos de controle/sinal, alguns fabricantes admitem até 50% de ocupação. Para cabos de energia em camadas múltiplas, aplicar fator de agrupamento da NBR 5410 (Tabela 42) à corrente de projeto.</p>
+          <p><span class="nbr-tag">FATOR DE AGRUPAMENTO</span><span class="nbr-tag">TABELA 42 · NBR 5410</span></p>
+          <p>O dimensionamento abaixo retorna as eletrocalhas comerciais cuja área útil acomoda os cabos abaixo do limite de 40%.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== -->
+  <!-- TAB 04: REFERÊNCIA VISUAL -->
+  <!-- ============================================== -->
+  <section class="tab-panel" id="tab-referencia">
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title"><strong>Referência</strong> · Componentes &amp; Normas</div>
+        <div class="panel-badge">VISUAL</div>
+      </div>
+      <div class="panel-body">
+
+        <div class="ref-grid">
+          <!-- ELETRODUTO -->
+          <div class="ref-card">
+            <div class="ref-card-img">
+              <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="condGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#3a4048"/>
+                    <stop offset="0.5" stop-color="#1c1f23"/>
+                    <stop offset="1" stop-color="#3a4048"/>
+                  </linearGradient>
+                </defs>
+                <rect width="200" height="150" fill="#0f1316"/>
+                <!-- conduit body -->
+                <rect x="20" y="55" width="160" height="40" fill="url(#condGrad)" stroke="#4a5159"/>
+                <!-- end opening -->
+                <ellipse cx="20" cy="75" rx="6" ry="20" fill="#000"/>
+                <ellipse cx="20" cy="75" rx="3" ry="14" fill="#1c1f23"/>
+                <!-- cable inside -->
+                <circle cx="20" cy="70" r="3" fill="#d4ff3a"/>
+                <circle cx="20" cy="80" r="3" fill="#ff6b3a"/>
+                <circle cx="20" cy="75" r="3" fill="#6bb6ff"/>
+                <!-- label -->
+                <text x="100" y="125" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="8">ELETRODUTO PVC RÍGIDO · NBR 15465</text>
+                <line x1="100" y1="40" x2="100" y2="48" stroke="#d4ff3a" stroke-width="0.5"/>
+                <text x="100" y="34" text-anchor="middle" fill="#d4ff3a" font-family="JetBrains Mono, monospace" font-size="7">Ø INTERNO</text>
+              </svg>
+            </div>
+            <div class="ref-card-body">
+              <div class="ref-card-title">01 · Eletroduto</div>
+              <div class="ref-card-desc">Tubo condutor rígido (PVC anti-chama) ou flexível, dimensionado pela área quadrada total dos cabos ÷ fator 0,40. Bitolas comerciais conforme NBR 5444.</div>
+            </div>
+          </div>
+
+          <!-- ELETROCALHA -->
+          <div class="ref-card">
+            <div class="ref-card-img">
+              <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="150" fill="#0f1316"/>
+                <!-- tray perspective -->
+                <polygon points="30,55 170,55 180,70 20,70" fill="#2a3038" stroke="#4a5159"/>
+                <polygon points="20,70 180,70 180,110 20,110" fill="#1c1f23" stroke="#4a5159"/>
+                <polygon points="180,70 180,110 190,95 190,60" fill="#3a4048" stroke="#4a5159"/>
+                <!-- perforations -->
+                <circle cx="50" cy="62" r="1.5" fill="#0a0d0f"/>
+                <circle cx="80" cy="62" r="1.5" fill="#0a0d0f"/>
+                <circle cx="110" cy="62" r="1.5" fill="#0a0d0f"/>
+                <circle cx="140" cy="62" r="1.5" fill="#0a0d0f"/>
+                <!-- cables inside -->
+                <ellipse cx="50" cy="95" rx="8" ry="8" fill="#1a1d20" stroke="#d4ff3a" stroke-width="1"/>
+                <ellipse cx="68" cy="95" rx="8" ry="8" fill="#1a1d20" stroke="#ff6b3a" stroke-width="1"/>
+                <ellipse cx="86" cy="95" rx="8" ry="8" fill="#1a1d20" stroke="#6bb6ff" stroke-width="1"/>
+                <ellipse cx="104" cy="95" rx="8" ry="8" fill="#1a1d20" stroke="#d4ff3a" stroke-width="1"/>
+                <!-- dim arrows -->
+                <line x1="20" y1="125" x2="180" y2="125" stroke="#d4ff3a" stroke-width="0.5"/>
+                <line x1="20" y1="123" x2="20" y2="127" stroke="#d4ff3a" stroke-width="0.5"/>
+                <line x1="180" y1="123" x2="180" y2="127" stroke="#d4ff3a" stroke-width="0.5"/>
+                <text x="100" y="135" text-anchor="middle" fill="#d4ff3a" font-family="JetBrains Mono, monospace" font-size="7">LARGURA</text>
+                <text x="100" y="145" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="7">ELETROCALHA PERFURADA</text>
+              </svg>
+            </div>
+            <div class="ref-card-body">
+              <div class="ref-card-title">02 · Eletrocalha</div>
+              <div class="ref-card-desc">Bandeja em chapa de aço galvanizada, perfurada ou lisa. Disposição em camada única recomendada. Ocupação máxima de 40% da área útil interna (largura × altura).</div>
+            </div>
+          </div>
+
+          <!-- CABLES DIAGRAM -->
+          <div class="ref-card">
+            <div class="ref-card-img">
+              <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="150" fill="#0f1316"/>
+                <!-- PVC cable -->
+                <circle cx="55" cy="75" r="22" fill="#1c1f23" stroke="#d4ff3a"/>
+                <circle cx="55" cy="75" r="18" fill="#2a3038"/>
+                <circle cx="55" cy="75" r="6" fill="#c19158"/>
+                <text x="55" y="110" text-anchor="middle" fill="#d4ff3a" font-family="JetBrains Mono, monospace" font-size="7">PVC 70°C</text>
+                <text x="55" y="119" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="6">750V</text>
+
+                <!-- EPR cable -->
+                <circle cx="145" cy="75" r="28" fill="#1c1f23" stroke="#ff6b3a"/>
+                <circle cx="145" cy="75" r="24" fill="#252b32"/>
+                <circle cx="145" cy="65" r="6" fill="#c19158"/>
+                <circle cx="135" cy="82" r="6" fill="#c19158"/>
+                <circle cx="155" cy="82" r="6" fill="#c19158"/>
+                <text x="145" y="115" text-anchor="middle" fill="#ff6b3a" font-family="JetBrains Mono, monospace" font-size="7">EPR / XLPE 90°C</text>
+                <text x="145" y="123" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="6">0,6/1 kV</text>
+
+                <!-- legend -->
+                <text x="100" y="20" text-anchor="middle" fill="#8a949c" font-family="JetBrains Mono, monospace" font-size="7">SEÇÃO TRANSVERSAL</text>
+              </svg>
+            </div>
+            <div class="ref-card-body">
+              <div class="ref-card-title">03 · Cabos de Energia</div>
+              <div class="ref-card-desc">PVC suporta até 70°C em regime e é destinado a circuitos terminais 750V. EPR/HEPR/XLPE opera até 90°C e é indicado para alimentadores e quadros — maior ampacidade.</div>
+            </div>
+          </div>
+
+          <!-- CAT 5e/6 -->
+          <div class="ref-card">
+            <div class="ref-card-img">
+              <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="150" fill="#0f1316"/>
+                <!-- outer jacket -->
+                <circle cx="100" cy="75" r="35" fill="#1c1f23" stroke="#6bb6ff" stroke-width="1.5"/>
+                <!-- 4 twisted pairs -->
+                <g transform="translate(100,75)">
+                  <circle cx="-12" cy="-12" r="6" fill="#ff6b3a"/>
+                  <circle cx="-6" cy="-15" r="6" fill="#ffffff" stroke="#ff6b3a" stroke-width="0.6" stroke-dasharray="1 1"/>
+                  <circle cx="12" cy="-12" r="6" fill="#6bb6ff"/>
+                  <circle cx="15" cy="-6" r="6" fill="#ffffff" stroke="#6bb6ff" stroke-width="0.6" stroke-dasharray="1 1"/>
+                  <circle cx="12" cy="12" r="6" fill="#6bd96b"/>
+                  <circle cx="6" cy="15" r="6" fill="#ffffff" stroke="#6bd96b" stroke-width="0.6" stroke-dasharray="1 1"/>
+                  <circle cx="-12" cy="12" r="6" fill="#c8a832"/>
+                  <circle cx="-15" cy="6" r="6" fill="#ffffff" stroke="#c8a832" stroke-width="0.6" stroke-dasharray="1 1"/>
+                </g>
+                <text x="100" y="130" text-anchor="middle" fill="#6bb6ff" font-family="JetBrains Mono, monospace" font-size="7">CAT 5e / 6 · UTP · 4 PARES</text>
+                <text x="100" y="140" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="6">SELV · ATÉ 250 MHz / 500 MHz</text>
+              </svg>
+            </div>
+            <div class="ref-card-body">
+              <div class="ref-card-title">04 · Cabos de Rede</div>
+              <div class="ref-card-desc">Cat 5e (até Gigabit Ethernet, 100 MHz, classe D) e Cat 6 (até 10 GbE em até 55m, 250 MHz, classe E). Trançamento dos pares minimiza diafonia e interferência.</div>
+            </div>
+          </div>
+
+          <!-- CFTV -->
+          <div class="ref-card">
+            <div class="ref-card-img">
+              <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="150" fill="#0f1316"/>
+                <!-- coax -->
+                <circle cx="65" cy="75" r="25" fill="#1c1f23" stroke="#6bb6ff" stroke-width="1.5"/>
+                <circle cx="65" cy="75" r="20" fill="#2a3038"/>
+                <circle cx="65" cy="75" r="14" fill="#3a3a3a"/>
+                <circle cx="65" cy="75" r="8" fill="#252b32"/>
+                <circle cx="65" cy="75" r="3" fill="#c19158"/>
+                <text x="65" y="115" text-anchor="middle" fill="#6bb6ff" font-family="JetBrains Mono, monospace" font-size="7">COAXIAL 59</text>
+                <text x="65" y="123" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="6">75Ω · CFTV ANALÓGICO</text>
+                <!-- multiconductor 8 vias -->
+                <circle cx="145" cy="75" r="22" fill="#1c1f23" stroke="#6bb6ff" stroke-width="1.5"/>
+                <g transform="translate(145,75)">
+                  <circle cx="-10" cy="-10" r="4" fill="#ff6b3a"/>
+                  <circle cx="0" cy="-12" r="4" fill="#6bd96b"/>
+                  <circle cx="10" cy="-10" r="4" fill="#6bb6ff"/>
+                  <circle cx="12" cy="0" r="4" fill="#c8a832"/>
+                  <circle cx="10" cy="10" r="4" fill="#ff6b3a"/>
+                  <circle cx="0" cy="12" r="4" fill="#6bd96b"/>
+                  <circle cx="-10" cy="10" r="4" fill="#6bb6ff"/>
+                  <circle cx="-12" cy="0" r="4" fill="#c8a832"/>
+                </g>
+                <text x="145" y="115" text-anchor="middle" fill="#6bb6ff" font-family="JetBrains Mono, monospace" font-size="7">CABO CFTV / ALARME</text>
+                <text x="145" y="123" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="6">MULTIVIAS</text>
+              </svg>
+            </div>
+            <div class="ref-card-body">
+              <div class="ref-card-title">05 · Sistemas Especiais</div>
+              <div class="ref-card-desc">CFTV analógico em coaxial série 59 (impedância 75Ω). Sistemas de automação, alarme e telefonia em cabos multivias com bitolas reduzidas — todos em SELV/PELV.</div>
+            </div>
+          </div>
+
+          <!-- NORM CARD -->
+          <div class="ref-card">
+            <div class="ref-card-img" style="background: linear-gradient(135deg, rgba(212,255,58,0.06), transparent);">
+              <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="150" fill="transparent"/>
+                <text x="100" y="55" text-anchor="middle" fill="#d4ff3a" font-family="Fraunces, serif" font-weight="800" font-size="28">NBR</text>
+                <text x="100" y="92" text-anchor="middle" fill="#e8ebed" font-family="Fraunces, serif" font-weight="600" font-size="36" letter-spacing="-1">5410</text>
+                <text x="100" y="115" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="7">INSTALAÇÕES ELÉTRICAS DE</text>
+                <text x="100" y="125" text-anchor="middle" fill="#5a6470" font-family="JetBrains Mono, monospace" font-size="7">BAIXA TENSÃO · BR</text>
+              </svg>
+            </div>
+            <div class="ref-card-body">
+              <div class="ref-card-title">06 · Normas Aplicadas</div>
+              <div class="ref-card-desc"><strong>NBR 5410</strong> — instalações elétricas de baixa tensão. <strong>NBR 5444</strong> — referência de conversão de diâmetros nominais. <strong>NBR 14565</strong> — cabeamento estruturado. <strong>NBR 15465</strong> — eletrodutos plásticos.</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tabelas comerciais por material -->
+    <div class="method" style="margin-top: 24px;">
+      <h3>◆ Tabelas Comerciais de Eletrodutos · Por Material</h3>
+      <p style="font-size: 13px; color: var(--ink-dim); margin: 0 0 18px; line-height: 1.6;">
+        No Brasil, eletrodutos são identificados por <strong style="color: var(--ink);">bitola (rosca)</strong> e
+        comercializados com referência ao <strong style="color: var(--accent);">DN — diâmetro nominal em milímetros</strong>.
+        O DN é o valor de entrada nas famílias do <strong style="color: var(--ink);">Revit</strong>.
+      </p>
+      <div id="tabelas-materiais"></div>
+      <p style="font-size: 11px; color: var(--ink-mute); margin: 14px 0 0; font-family: 'JetBrains Mono', monospace; line-height: 1.7;">
+        ▸ <strong style="color: var(--accent);">Ø interno</strong> é o valor usado no cálculo de ocupação. Valores conforme catálogos Tigre, Amanco, Elecon, Santa Marta, Kanaflex, Cimflex e normas ABNT.<br>
+        ▸ Galvanizado tem Ø interno <strong style="color: var(--ink);">maior</strong> que o PVC equivalente (paredes mais finas em relação ao Ø externo) — por isso uma bitola menor de aço pode atender o mesmo cálculo.<br>
+        ▸ PEAD é referenciado direto pelo DN comercial, sem padrão de polegada universal.
+      </p>
+    </div>
+
+  </section>
+
+  <footer>
+    LF Labs · Cálculo conforme NBR 5410 / NBR 5444 · Sempre valide com norma vigente e especificações do fabricante · 2026
+  </footer>
+
+</main>
+
+<script>
+'use strict';
+
+/* ============================================================
+ * DADOS — DA PLANILHA ORIGINAL R03
+ * ============================================================ */
+
+// Cabos PVC 750V 70°C
+const CABOS_PVC = [
+  { secao: 1.5,  diam: 2.9 },
+  { secao: 2.5,  diam: 3.5 },
+  { secao: 4,    diam: 4.0 },
+  { secao: 6,    diam: 4.6 },
+  { secao: 10,   diam: 5.9 },
+  { secao: 16,   diam: 7.5 },
+];
+
+// Cabos EPR / XLPE 90°C (0,6/1 kV)
+const CABOS_EPR = [
+  { secao: 6,    diam: 6.1 },
+  { secao: 10,   diam: 7.6 },
+  { secao: 16,   diam: 8.4 },
+  { secao: 25,   diam: 10.3 },
+  { secao: 35,   diam: 11.4 },
+  { secao: 50,   diam: 13.3 },
+  { secao: 70,   diam: 15.7 },
+  { secao: 95,   diam: 17.6 },
+  { secao: 120,  diam: 19.5 },
+  { secao: 150,  diam: 21.8 },
+  { secao: 185,  diam: 23.8 },
+  { secao: 240,  diam: 26.8 },
+  { secao: 300,  diam: 30.5 },
+];
+
+// Cabos de Sistemas
+const CABOS_SISTEMAS = [
+  { nome: 'CAT 5e',                      diam: 5.1 },
+  { nome: 'CAT 6',                       diam: 5.8 },
+  { nome: 'CFTV (8 vias)',               diam: 4.5 },
+  { nome: 'Cabo Telefônico (4 vias)',    diam: 4.0 },
+  { nome: 'Alarme Multicores (4 vias)',  diam: 2.8 },
+  { nome: 'Cabo Coaxial Série 59',       diam: 5.7 },
+  { nome: 'Cabo de Som (2 vias)',        diam: 4.82 },
+];
+
+// Tabelas de eletrodutos por material — bitolas comerciais Brasil
+//   pol:    referência de rosca (catálogo)
+//   dn:     diâmetro nominal em mm (vai no Revit)
+//   int_d:  diâmetro INTERNO em mm (usado no cálculo de ocupação)
+//   norma:  norma técnica de referência
+
+const MATERIAIS = {
+  pvc: {
+    nome: 'PVC Rígido',
+    sub: 'Tigre · Amanco · Krona · Elecon',
+    norma: 'NBR 5444 / NBR 15465',
+    cor: '#d4ff3a',
+    aplicacao: 'Interno embutido em alvenaria e laje · circuitos terminais e alimentadores prediais.',
+    bitolas: [
+      { pol: '1/2"',   dn: 15,  int_d: 13.0 },
+      { pol: '3/4"',   dn: 20,  int_d: 16.0 },
+      { pol: '1"',     dn: 25,  int_d: 21.0 },
+      { pol: '1.1/4"', dn: 32,  int_d: 27.0 },
+      { pol: '1.1/2"', dn: 40,  int_d: 33.0 },
+      { pol: '2"',     dn: 50,  int_d: 37.0 },
+      { pol: '2.1/2"', dn: 60,  int_d: 53.0 },
+      { pol: '3"',     dn: 75,  int_d: 62.0 },
+      { pol: '4"',     dn: 100, int_d: 78.0 },
+    ]
+  },
+  pead: {
+    nome: 'PEAD Corrugado',
+    sub: 'Kanaflex · Cimflex · Techduto · Cimduto',
+    norma: 'NBR 15715',
+    cor: '#6bb6ff',
+    aplicacao: 'Enterrado em vala · redes subterrâneas de energia e dados · travessias e infraestrutura externa.',
+    bitolas: [
+      { pol: 'DN 20',  dn: 20,  int_d: 17.5 },
+      { pol: 'DN 25',  dn: 25,  int_d: 22.0 },
+      { pol: 'DN 32',  dn: 32,  int_d: 28.5 },
+      { pol: 'DN 40',  dn: 40,  int_d: 36.0 },
+      { pol: 'DN 50',  dn: 50,  int_d: 43.0 },
+      { pol: 'DN 63',  dn: 63,  int_d: 55.0 },
+      { pol: 'DN 75',  dn: 75,  int_d: 65.0 },
+      { pol: 'DN 90',  dn: 90,  int_d: 78.0 },
+      { pol: 'DN 110', dn: 110, int_d: 96.0 },
+    ]
+  },
+  galv: {
+    nome: 'Aço Galvanizado',
+    sub: 'Santa Marta · Apolo · Perfil Líder · Megaduto',
+    norma: 'NBR 5597 (NPT) / NBR 5598 (BSP)',
+    cor: '#ff6b3a',
+    aplicacao: 'Aparente em indústria · áreas classificadas atmosfera explosiva · alta resistência mecânica.',
+    bitolas: [
+      { pol: '1/2"',   dn: 15,  int_d: 16.8 },
+      { pol: '3/4"',   dn: 20,  int_d: 22.4 },
+      { pol: '1"',     dn: 25,  int_d: 28.4 },
+      { pol: '1.1/4"', dn: 32,  int_d: 36.4 },
+      { pol: '1.1/2"', dn: 40,  int_d: 42.3 },
+      { pol: '2"',     dn: 50,  int_d: 53.6 },
+      { pol: '2.1/2"', dn: 65,  int_d: 65.5 },
+      { pol: '3"',     dn: 80,  int_d: 81.4 },
+      { pol: '4"',     dn: 100, int_d: 105.8 },
+    ]
+  }
+};
+
+// Margem de segurança aplicada ao Ø calculado
+const MARGEM_SEGURANCA = 0.10; // 10% conservador
+
+// Material selecionado por aba (estado global)
+const matSelecionado = { energia: 'pvc', sistemas: 'pvc' };
+
+// Eletrocalhas comerciais (largura x altura, em mm)
+const ELETROCALHAS = [
+  { l: 50,  h: 50  },
+  { l: 75,  h: 50  },
+  { l: 100, h: 50  },
+  { l: 150, h: 50  },
+  { l: 200, h: 50  },
+  { l: 300, h: 50  },
+  { l: 400, h: 50  },
+  { l: 100, h: 75  },
+  { l: 150, h: 75  },
+  { l: 200, h: 75  },
+  { l: 300, h: 75  },
+  { l: 400, h: 75  },
+  { l: 500, h: 75  },
+  { l: 100, h: 100 },
+  { l: 150, h: 100 },
+  { l: 200, h: 100 },
+  { l: 300, h: 100 },
+  { l: 400, h: 100 },
+  { l: 500, h: 100 },
+];
+
+/* ============================================================
+ * RENDERIZAÇÃO DE INPUTS
+ * ============================================================ */
+
+function renderCableRow(container, prefix, idx, label, diam) {
+  const row = document.createElement('div');
+  row.className = 'cable-row';
+  row.innerHTML = `
+    <div class="cable-name">${label}</div>
+    <div class="cable-diam">${diam.toFixed(1)}</div>
+    <input type="number" min="0" step="1" placeholder="0" data-prefix="${prefix}" data-idx="${idx}" data-diam="${diam}">
+  `;
+  container.appendChild(row);
+}
+
+function initInputs() {
+  // PVC para eletroduto
+  const cPvc = document.getElementById('cables-pvc');
+  CABOS_PVC.forEach((c, i) => renderCableRow(cPvc, 'pvc', i, `${c.secao} mm²`, c.diam));
+
+  // EPR para eletroduto
+  const cEpr = document.getElementById('cables-epr');
+  CABOS_EPR.forEach((c, i) => renderCableRow(cEpr, 'epr', i, `${c.secao} mm²`, c.diam));
+
+  // Sistemas
+  const cSys = document.getElementById('cables-sys');
+  CABOS_SISTEMAS.forEach((c, i) => renderCableRow(cSys, 'sys', i, c.nome, c.diam));
+
+  // Eletrocalha — mesmas listas
+  const tPvc = document.getElementById('tray-pvc');
+  CABOS_PVC.forEach((c, i) => renderCableRow(tPvc, 'tray-pvc', i, `${c.secao} mm²`, c.diam));
+
+  const tEpr = document.getElementById('tray-epr');
+  CABOS_EPR.forEach((c, i) => renderCableRow(tEpr, 'tray-epr', i, `${c.secao} mm²`, c.diam));
+
+  // Tabelas comerciais por material
+  const tabelasDiv = document.getElementById('tabelas-materiais');
+  Object.entries(MATERIAIS).forEach(([key, mat]) => {
+    const block = document.createElement('div');
+    block.style.cssText = 'margin-bottom: 24px;';
+    const hex = mat.cor.replace('#',''); const r=parseInt(hex.slice(0,2),16); const g=parseInt(hex.slice(2,4),16); const b=parseInt(hex.slice(4,6),16); const corBg = `rgba(${r},${g},${b},0.10)`;
+    block.innerHTML = `
+      <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line-soft);">
+        <div>
+          <span style="display: inline-block; width: 8px; height: 8px; background: ${mat.cor}; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px ${mat.cor};"></span>
+          <strong style="font-family: 'Fraunces', serif; font-size: 17px; color: var(--ink);">${mat.nome}</strong>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-mute); margin-left: 10px;">${mat.sub}</span>
+        </div>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: ${mat.cor}; letter-spacing: 0.1em;">${mat.norma}</span>
+      </div>
+      <p style="font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; font-style: italic;">${mat.aplicacao}</p>
+      <table style="width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 12px;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--line);">
+            <th style="text-align: left; padding: 8px 10px; color: var(--ink-mute); font-weight: 500; letter-spacing: 0.1em; font-size: 10px;">BITOLA</th>
+            <th style="text-align: right; padding: 8px 10px; color: var(--accent); font-weight: 500; letter-spacing: 0.1em; font-size: 10px;">DN (mm) · REVIT</th>
+            <th style="text-align: right; padding: 8px 10px; color: var(--ink-mute); font-weight: 500; letter-spacing: 0.1em; font-size: 10px;">Ø INTERNO (mm)</th>
+            <th style="text-align: right; padding: 8px 10px; color: var(--ink-mute); font-weight: 500; letter-spacing: 0.1em; font-size: 10px;">Ø² (mm²)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    `;
+    const tb = block.querySelector('tbody');
+    mat.bitolas.forEach(e => {
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid var(--line-soft)';
+      tr.innerHTML = `
+        <td style="padding: 8px 10px; color: var(--ink);">${e.pol}</td>
+        <td style="padding: 8px 10px; text-align: right;">
+          <span style="background: ${corBg}; color: ${mat.cor}; padding: 3px 8px; border-radius: 2px; font-weight: 700; border: 1px solid ${mat.cor}30;">DN ${e.dn}</span>
+        </td>
+        <td style="padding: 8px 10px; text-align: right; color: var(--ink);">${e.int_d.toFixed(1)}</td>
+        <td style="padding: 8px 10px; text-align: right; color: var(--ink-dim);">${(e.int_d * e.int_d).toFixed(0)}</td>
+      `;
+      tb.appendChild(tr);
+    });
+    tabelasDiv.appendChild(block);
+  });
+
+  // Listeners — inputs de cabos
+  document.querySelectorAll('input[type="number"]').forEach(inp => {
+    inp.addEventListener('input', recalcAll);
+  });
+
+  // Listeners — seletor de material
+  document.querySelectorAll('.mat-selector').forEach(sel => {
+    const target = sel.dataset.target; // 'energia' ou 'sistemas'
+    sel.querySelectorAll('.mat-card').forEach(card => {
+      // marcar o ativo inicial
+      if (card.dataset.mat === matSelecionado[target]) card.classList.add('active');
+      card.addEventListener('click', () => {
+        sel.querySelectorAll('.mat-card').forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        matSelecionado[target] = card.dataset.mat;
+        recalcAll();
+      });
+    });
+  });
+}
+
+/* ============================================================
+ * CÁLCULOS
+ * ============================================================ */
+
+function getCablesData(prefix) {
+  const inputs = document.querySelectorAll(`input[data-prefix="${prefix}"]`);
+  const list = [];
+  inputs.forEach(inp => {
+    const qty = parseInt(inp.value) || 0;
+    const diam = parseFloat(inp.dataset.diam);
+    if (qty > 0) list.push({ qty, diam });
+  });
+  return list;
+}
+
+function calcSomaQuadrada(cables) {
+  return cables.reduce((sum, c) => sum + (c.diam * c.diam * c.qty), 0);
+}
+
+function calcDiametroEletroduto(somaQuad, fator) {
+  return Math.sqrt(somaQuad / fator);
+}
+
+function findEletrodutoComercial(diamCalc, materialKey) {
+  const diamAlvo = diamCalc * (1 + MARGEM_SEGURANCA);
+  const tabela = MATERIAIS[materialKey].bitolas;
+  for (const e of tabela) {
+    if (e.int_d >= diamAlvo) {
+      return { ...e, diamAlvo, folga: e.int_d - diamCalc, folgaPct: (e.int_d / diamCalc - 1) * 100 };
+    }
+  }
+  return null; // acima da maior bitola do material
+}
+
+function findEletrocalhasCompativeis(somaQuad, limite = 0.40) {
+  return ELETROCALHAS.map(e => {
+    const areaTotal = e.l * e.h;
+    const areaUtil  = areaTotal * limite;
+    const pct = (somaQuad / areaTotal) * 100;
+    return { ...e, areaTotal, areaUtil, pct, fits: somaQuad <= areaUtil };
+  }).sort((a, b) => a.areaTotal - b.areaTotal);
+}
+
+/* ============================================================
+ * UI UPDATES
+ * ============================================================ */
+
+function setCommercialEmpty(prefix) {
+  const cm = document.getElementById(prefix + '-comercial');
+  cm.classList.add('empty');
+  cm.querySelector('[data-field="pol"]').textContent = '—';
+  cm.querySelector('[data-field="dn"]').innerHTML = '—<sup>mm</sup>';
+  cm.querySelector('[data-field="spec"]').innerHTML = 'Adicione cabos para calcular.<br>Conforme NBR 5444 e NBR 15465.';
+}
+
+function setCommercialResult(prefix, comercial, soma, materialKey) {
+  const cm = document.getElementById(prefix + '-comercial');
+  cm.classList.remove('empty');
+  const mat = MATERIAIS[materialKey];
+  if (comercial) {
+    cm.querySelector('[data-field="pol"]').textContent = comercial.pol;
+    cm.querySelector('[data-field="dn"]').innerHTML = `${comercial.dn}<sup>mm</sup>`;
+    const areaInt = comercial.int_d * comercial.int_d;
+    const pctReal = (soma / areaInt) * 100;
+    const folgaColor = comercial.folgaPct >= 10 ? 'var(--ok)' : (comercial.folgaPct >= 5 ? 'var(--warn)' : 'var(--err)');
+    cm.querySelector('[data-field="spec"]').innerHTML = `
+      <div style="color: var(--ink); font-weight: 700; margin-bottom: 6px;">Ø interno · ${comercial.int_d.toFixed(1)} mm</div>
+      <div style="color: var(--ink-dim);">${mat.nome}</div>
+      <div style="color: var(--ink-dim);">Ocupação · ${pctReal.toFixed(1)}%</div>
+      <div style="color: ${folgaColor}; margin-top: 4px;">Folga · +${comercial.folga.toFixed(1)} mm (${comercial.folgaPct.toFixed(1)}%)</div>
+    `;
+    return pctReal;
+  } else {
+    cm.querySelector('[data-field="pol"]').textContent = '—';
+    cm.querySelector('[data-field="dn"]').innerHTML = '—<sup>mm</sup>';
+    cm.querySelector('[data-field="spec"]').innerHTML = `
+      <div style="color: var(--warn); font-weight: 700;">Acima da maior bitola</div>
+      <div style="color: var(--ink-dim);">${mat.nome}</div>
+      <div style="color: var(--ink-dim); margin-top: 4px;">Dividir circuitos em mais<br>de um eletroduto, ou trocar material.</div>
+    `;
+    return null;
+  }
+}
+
+function updateEnergia() {
+  const pvc = getCablesData('pvc');
+  const epr = getCablesData('epr');
+  const all = [...pvc, ...epr];
+  const soma = calcSomaQuadrada(all);
+
+  if (soma === 0) {
+    document.getElementById('energia-soma').textContent = '—';
+    document.getElementById('energia-soma').classList.add('muted');
+    document.getElementById('energia-diam').innerHTML = '—<span class="readout-unit">mm</span>';
+    document.getElementById('energia-diam').classList.add('muted');
+    document.getElementById('energia-status').textContent = 'AGUARDANDO';
+    setCommercialEmpty('energia');
+    document.getElementById('energia-fill-pct').textContent = '0%';
+    document.getElementById('energia-fill-pct').className = 'fill-value';
+    const fb = document.getElementById('energia-fill-bar');
+    fb.style.width = '0%';
+    fb.className = 'fill-bar-fill';
+    return;
+  }
+
+  const diamCalc = calcDiametroEletroduto(soma, 0.40);
+  const matKey = matSelecionado.energia;
+  const comercial = findEletrodutoComercial(diamCalc, matKey);
+
+  document.getElementById('energia-soma').textContent = soma.toFixed(1);
+  document.getElementById('energia-soma').classList.remove('muted');
+  document.getElementById('energia-diam').innerHTML = `${diamCalc.toFixed(1)}<span class="readout-unit">mm</span>`;
+  document.getElementById('energia-diam').classList.remove('muted');
+  document.getElementById('energia-status').textContent = 'CALCULADO';
+
+  // Atualiza o Ø alvo exibido (com margem)
+  const diamAlvoEl = document.getElementById('energia-alvo');
+  if (diamAlvoEl) diamAlvoEl.textContent = `${(diamCalc * (1 + MARGEM_SEGURANCA)).toFixed(1)} mm`;
+
+  const pctReal = setCommercialResult('energia', comercial, soma, matKey);
+
+  // fill bar — escala onde 40% (limite NBR) preenche 100% da barra
+  const fb = document.getElementById('energia-fill-bar');
+  const fp = document.getElementById('energia-fill-pct');
+  if (pctReal !== null) {
+    fb.style.width = `${Math.min(pctReal * 2.5, 100)}%`;
+    fp.textContent = `${pctReal.toFixed(1)}%`;
+    if (pctReal > 40) { fb.className = 'fill-bar-fill err'; fp.className = 'fill-value err'; }
+    else if (pctReal > 32) { fb.className = 'fill-bar-fill warn'; fp.className = 'fill-value warn'; }
+    else { fb.className = 'fill-bar-fill'; fp.className = 'fill-value'; }
+  } else {
+    fb.style.width = '100%';
+    fb.className = 'fill-bar-fill err';
+    fp.textContent = 'N/A';
+    fp.className = 'fill-value err';
+  }
+}
+
+function updateSistemas() {
+  const sys = getCablesData('sys');
+  const soma = calcSomaQuadrada(sys);
+
+  if (soma === 0) {
+    document.getElementById('sistemas-soma').textContent = '—';
+    document.getElementById('sistemas-soma').classList.add('muted');
+    document.getElementById('sistemas-diam').innerHTML = '—<span class="readout-unit">mm</span>';
+    document.getElementById('sistemas-diam').classList.add('muted');
+    document.getElementById('sistemas-status').textContent = 'AGUARDANDO';
+    setCommercialEmpty('sistemas');
+    document.getElementById('sistemas-fill-pct').textContent = '0%';
+    document.getElementById('sistemas-fill-pct').className = 'fill-value';
+    const fb = document.getElementById('sistemas-fill-bar');
+    fb.style.width = '0%';
+    fb.className = 'fill-bar-fill';
+    return;
+  }
+
+  const diamCalc = calcDiametroEletroduto(soma, 1.0);
+  const matKey = matSelecionado.sistemas;
+  const comercial = findEletrodutoComercial(diamCalc, matKey);
+
+  document.getElementById('sistemas-soma').textContent = soma.toFixed(1);
+  document.getElementById('sistemas-soma').classList.remove('muted');
+  document.getElementById('sistemas-diam').innerHTML = `${diamCalc.toFixed(1)}<span class="readout-unit">mm</span>`;
+  document.getElementById('sistemas-diam').classList.remove('muted');
+  document.getElementById('sistemas-status').textContent = 'CALCULADO';
+
+  const diamAlvoEl = document.getElementById('sistemas-alvo');
+  if (diamAlvoEl) diamAlvoEl.textContent = `${(diamCalc * (1 + MARGEM_SEGURANCA)).toFixed(1)} mm`;
+
+  const pctReal = setCommercialResult('sistemas', comercial, soma, matKey);
+
+  const fb = document.getElementById('sistemas-fill-bar');
+  const fp = document.getElementById('sistemas-fill-pct');
+  if (pctReal !== null) {
+    fb.style.width = `${Math.min(pctReal, 100)}%`;
+    fp.textContent = `${pctReal.toFixed(1)}%`;
+    if (pctReal > 80) { fb.className = 'fill-bar-fill warn'; fp.className = 'fill-value warn'; }
+    else { fb.className = 'fill-bar-fill'; fp.className = 'fill-value'; }
+  } else {
+    fb.style.width = '100%';
+    fb.className = 'fill-bar-fill err';
+    fp.textContent = 'N/A';
+    fp.className = 'fill-value err';
+  }
+}
+
+function updateEletrocalha() {
+  const pvc = getCablesData('tray-pvc');
+  const epr = getCablesData('tray-epr');
+  const all = [...pvc, ...epr];
+  const soma = calcSomaQuadrada(all);
+
+  const container = document.getElementById('tray-options');
+
+  if (soma === 0) {
+    document.getElementById('tray-area').textContent = '—';
+    document.getElementById('tray-area').classList.add('muted');
+    document.getElementById('tray-minarea').textContent = '—';
+    document.getElementById('tray-minarea').classList.add('muted');
+    document.getElementById('tray-status').textContent = 'AGUARDANDO';
+    container.innerHTML = '<div style="grid-column: 1/-1; padding: 20px; text-align: center; color: var(--ink-mute); font-family: JetBrains Mono, monospace; font-size: 11px;">Adicione cabos para ver as opções de eletrocalha</div>';
+    return;
+  }
+
+  const areaMin = soma / 0.40;
+  document.getElementById('tray-area').textContent = soma.toFixed(0);
+  document.getElementById('tray-area').classList.remove('muted');
+  document.getElementById('tray-minarea').textContent = areaMin.toFixed(0);
+  document.getElementById('tray-minarea').classList.remove('muted');
+  document.getElementById('tray-status').textContent = 'CALCULADO';
+
+  const opts = findEletrocalhasCompativeis(soma);
+  const fits = opts.filter(o => o.fits);
+  const minFitArea = fits.length > 0 ? fits[0].areaTotal : null;
+
+  container.innerHTML = '';
+  opts.forEach(o => {
+    const card = document.createElement('div');
+    card.className = 'tray-card';
+    if (!o.fits) card.classList.add('unfit');
+    if (minFitArea !== null && o.areaTotal === minFitArea) card.classList.add('selected');
+
+    let fillClass = '';
+    if (o.pct > 40) fillClass = 'err';
+    else if (o.pct > 32) fillClass = 'warn';
+
+    card.innerHTML = `
+      <div class="tray-card-size">${o.l} × ${o.h}</div>
+      <div class="tray-card-area">${o.areaTotal.toLocaleString('pt-BR')} mm² · útil ${o.areaUtil.toLocaleString('pt-BR')}</div>
+      <div class="tray-card-fill ${fillClass}">${o.pct.toFixed(1)}% ocupado</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function recalcAll() {
+  updateEnergia();
+  updateSistemas();
+  updateEletrocalha();
+}
+
+/* ============================================================
+ * AÇÕES
+ * ============================================================ */
+
+function resetCables(scope) {
+  let selector;
+  if (scope === 'energia') selector = 'input[data-prefix="pvc"], input[data-prefix="epr"]';
+  else if (scope === 'sistemas') selector = 'input[data-prefix="sys"]';
+  else if (scope === 'tray') selector = 'input[data-prefix="tray-pvc"], input[data-prefix="tray-epr"]';
+  else selector = 'input[type="number"]';
+
+  document.querySelectorAll(selector).forEach(i => i.value = '');
+  recalcAll();
+}
+
+function exemplo() {
+  // Exemplo realista: alimentador de quadro com 4 cabos 16mm² EPR + circuitos terminais 2,5 e 4 mm²
+  document.querySelectorAll('input').forEach(i => i.value = '');
+  // PVC 2.5 (idx 1) — 6 cabos
+  document.querySelector('input[data-prefix="pvc"][data-idx="1"]').value = 6;
+  // PVC 4 (idx 2) — 3 cabos
+  document.querySelector('input[data-prefix="pvc"][data-idx="2"]').value = 3;
+  // EPR 16 (idx 2) — 4 cabos
+  document.querySelector('input[data-prefix="epr"][data-idx="2"]').value = 4;
+  recalcAll();
+}
+
+/* ============================================================
+ * TABS
+ * ============================================================ */
+
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* ============================================================
+ * INIT
+ * ============================================================ */
+
+document.addEventListener('DOMContentLoaded', () => {
+  initInputs();
+  recalcAll();
+});
+</script>
+
+</body>
+</html>
