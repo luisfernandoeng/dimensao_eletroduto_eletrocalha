@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="author" content="Luís Fernando — Engenharia Elétrica">
-<meta name="description" content="Calculadora de dimensionamento de eletrodutos e eletrocalhas conforme NBR 5410 / 5444 / 15715 / 5597. Por Luís Fernando, Engenharia Elétrica.">
+<meta name="author" content="Luís Fernando — Engenheiro Eletricista">
+<meta name="description" content="Calculadora de dimensionamento de eletrodutos e eletrocalhas conforme NBR 5410 / 5444 / 15715 / 5597. Por Luís Fernando, Eng. Eletricista.">
 <title>Dimensionamento — Eletrodutos & Eletrocalhas | NBR 5410</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔌</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -740,6 +743,121 @@
     margin-right: 4px;
   }
 
+  /* ===== KATEX FORMULA BOXES ===== */
+  .katex-box {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    border-radius: 0 3px 3px 0;
+    overflow-x: auto;
+    margin: 4px 0;
+  }
+  .katex-box .katex { font-size: 1.15em; color: var(--ink); }
+  .katex-box .katex-display { margin: 0; }
+  /* override KaTeX dark theme */
+  .katex { color: var(--ink) !important; }
+  .katex .mord, .katex .mbin, .katex .mrel,
+  .katex .mopen, .katex .mclose, .katex .minner { color: var(--ink); }
+  .katex .mfrac .frac-line { border-color: var(--ink-dim); }
+  /* inline ki span */
+  .ki {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: rgba(212,255,58,0.08);
+    color: var(--accent);
+    padding: 1px 5px;
+    border-radius: 2px;
+    border: 1px solid rgba(212,255,58,0.2);
+  }
+  /* formula sub-tabs */
+  .ftab { transition: color 0.15s, border-color 0.15s; }
+  .ftab:hover { color: var(--ink) !important; }
+  .ftab.active { color: var(--accent) !important; border-bottom-color: var(--accent) !important; }
+
+  /* ===== BITOLA OVERRIDE SELECTOR ===== */
+  .bitola-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 14px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .bitola-strip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    width: 100%;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .bitola-strip-label .reset-btn {
+    font-size: 9px;
+    color: var(--ink-mute);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: .1em;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .bitola-strip-label .reset-btn:hover { color: var(--accent); }
+  .bitola-btn {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    padding: 5px 9px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+    position: relative;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .bitola-btn:hover { border-color: var(--ink-dim); color: var(--ink); }
+  /* Estado: bitola calculada/recomendada */
+  .bitola-btn.recommended {
+    border-color: rgba(212,255,58,0.45);
+    color: var(--ink);
+  }
+  .bitola-btn.recommended::after {
+    content: '▲';
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  /* Estado: selecionado manualmente */
+  .bitola-btn.selected {
+    background: rgba(212,255,58,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  /* Estado: abaixo do mínimo calculado (apertado) */
+  .bitola-btn.tight {
+    border-color: rgba(255,90,90,0.4);
+    color: #ff8080;
+  }
+  .bitola-btn.tight::before {
+    content: '';
+    position: absolute;
+    bottom: 2px; right: 2px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--err);
+  }
+
   /* ===== LAYER BUTTONS ===== */
   .layer-btn {
     background: var(--bg);
@@ -832,7 +950,7 @@
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-mute);">por</span>
           <span style="font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; color: var(--ink);">Luís Fernando</span>
-          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-mute); background: var(--panel); border: 1px solid var(--line); padding: 2px 7px; border-radius: 2px; letter-spacing: 0.1em;">ENG. ELETRICISTA</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-mute); background: var(--panel); border: 1px solid var(--line); padding: 2px 7px; border-radius: 2px; letter-spacing: 0.1em;">ENG. ELÉTRICA</span>
         </div>
         <a href="https://www.linkedin.com/in/lu%C3%ADsfernand2/" target="_blank" rel="noopener"
            style="display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6bb6ff; text-decoration: none; border: 1px solid rgba(107,182,255,0.3); padding: 4px 10px; border-radius: 2px; transition: all 0.15s ease;"
@@ -847,7 +965,7 @@
     </div>
     <div class="header-meta">
       <div><span>NORMAS</span> &nbsp; NBR 5410 · 5444 · 15715 · 5597</div>
-      <div><span>MARGEM</span> &nbsp; +10% sobre Ø calculado</div>
+      <div><span>LIMITE</span> &nbsp; 40% de ocupação (NBR 5410)</div>
       <div><span>MATERIAIS</span> &nbsp; PVC · PEAD · Aço Galvanizado</div>
     </div>
   </div>
@@ -887,6 +1005,34 @@
             <div id="cables-epr"></div>
           </div>
 
+          <!-- DIVISÃO EM CONDUTOS PARALELOS -->
+          <div class="cable-section" style="margin-top: 18px;">
+            <div class="cable-section-title">
+              <span class="dot" style="background:#c8a832;box-shadow:0 0 8px #c8a832"></span>
+              Divisão em Condutos Paralelos · EE
+            </div>
+            <div style="font-size:11.5px;color:var(--ink-dim);line-height:1.6;margin-bottom:10px;">
+              Quantidade informada acima = <em>total por fase</em> (pernas × cabos/perna). Ex: 2 pernas de 150mm² = digitar <strong style="color:var(--ink)">2</strong> cabos de 150mm².
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-mute);letter-spacing:.12em;margin-bottom:5px;">Nº DE CONDUTOS</div>
+                <div style="display:flex;gap:6px;">
+                  <button class="layer-btn active" data-condutos="1">1</button>
+                  <button class="layer-btn" data-condutos="2">2</button>
+                  <button class="layer-btn" data-condutos="3">3</button>
+                  <button class="layer-btn" data-condutos="4">4</button>
+                </div>
+              </div>
+              <div style="flex:1;min-width:140px;padding:8px 12px;background:rgba(200,168,50,0.06);border:1px solid rgba(200,168,50,0.25);border-radius:3px;">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#c8a832;letter-spacing:.15em;margin-bottom:4px;">REGRA NORMATIVA</div>
+                <div id="condutos-regra" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-dim);line-height:1.5;">
+                  1 conduto · circuito completo F1+F2+F3+N
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="actions">
             <button class="btn" onclick="resetCables('energia')">Limpar</button>
             <button class="btn" onclick="exemplo()">Exemplo</button>
@@ -904,20 +1050,15 @@
 
           <div class="results-grid">
             <div class="readout">
-              <div class="readout-label">Σ D² × n (mm²)</div>
+              <div class="readout-label">Σ D² × n por conduto</div>
               <div class="readout-value muted" id="energia-soma">—</div>
-              <div class="readout-sub">Área quadrada total dos cabos</div>
+              <div class="readout-sub">Área quadrada / conduto</div>
             </div>
             <div class="readout">
               <div class="readout-label">Diâmetro Calculado</div>
               <div class="readout-value muted" id="energia-diam">—<span class="readout-unit">mm</span></div>
               <div class="readout-sub">√(ΣD²·n / 0,40)</div>
             </div>
-          </div>
-
-          <div class="margin-row">
-            <span class="margin-row-label">◆ MARGEM DE SEGURANÇA · 10%</span>
-            <span>Ø alvo mínimo: <span class="margin-row-value" id="energia-alvo">— mm</span></span>
           </div>
 
           <div style="margin-top: 18px;">
@@ -971,6 +1112,32 @@
                 </div>
               </div>
             </div>
+            <div class="bitola-strip" id="energia-bitola-strip" style="display:none;">
+              <div class="bitola-strip-label">
+                <span>◇ Testar outra bitola</span>
+                <button class="reset-btn" onclick="resetOverride('energia')">usar calculada</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RESULTADO CONDUTOS PARALELOS -->
+          <div id="energia-condutos-box" style="display:none; margin-top:16px; padding:16px 18px; background:rgba(200,168,50,0.06); border:1px solid rgba(200,168,50,0.3); border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.18em;color:#c8a832;text-transform:uppercase;margin-bottom:12px;">◆ Divisão em Condutos Paralelos</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-mute);">CONDUTOS</div>
+                <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--ink);" id="ec-num">—</div>
+              </div>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-mute);">CABOS / CONDUTO</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);margin-top:4px;line-height:1.5;" id="ec-cabos">—</div>
+              </div>
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-mute);">BITOLA CADA</div>
+                <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:#c8a832;" id="ec-bitola">—</div>
+              </div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-dim);border-top:1px solid rgba(200,168,50,0.2);padding-top:10px;line-height:1.6;" id="ec-norma-text">—</div>
           </div>
 
           <div class="fill-section">
@@ -993,16 +1160,15 @@
       <h3>◆ Metodologia · Eletroduto para Cabos de Energia</h3>
       <div class="method-grid">
         <div class="method-block">
-          <h4>Princípio do cálculo + margem</h4>
-          <p>A NBR 5410 limita a ocupação a <strong>40%</strong> da seção transversal interna quando há mais de 2 condutores. A aproximação por área quadrada (D²) é prática e ligeiramente conservadora.</p>
-          <div class="formula">Ø_calc = √( Σ(D_cabo² × n) ÷ 0,40 )<br>Ø_alvo = Ø_calc × 1,10</div>
-          <p>A <strong style="color: var(--accent);">margem de 10%</strong> é aplicada antes de aceitar a bitola comercial — impede que um eletroduto com apenas 1 a 2 mm de folga seja selecionado, evitando dificuldade na passagem dos cabos e ocupação real próxima do limite normativo.</p>
+          <h4>Princípio do cálculo</h4>
+          <p>A NBR 5410 limita a ocupação a <strong>40%</strong> da seção transversal interna quando há mais de 2 condutores. A aproximação por área quadrada (D²) é prática e conservadora — o fator de segurança já está incorporado no limite normativo.</p>
+          <div class="formula">Ø_calc = √( Σ(D_cabo² × n) ÷ 0,40 )</div>
+          <p>O menor eletroduto comercial cujo Ø interno ≥ Ø_calc é o selecionado. A folga real é exibida no card de resultado.</p>
         </div>
         <div class="method-block">
           <h4>Seleção entre 3 materiais</h4>
-          <p>Use os cards de material acima para ver o resultado em <strong>PVC rígido</strong>, <strong>PEAD corrugado</strong> ou <strong>aço galvanizado</strong>. As tabelas de Ø interno diferem entre os materiais — uma bitola menor de aço pode atender o mesmo cálculo que uma bitola maior de PVC.</p>
-          <p><span class="nbr-tag">NBR 5444</span><span class="nbr-tag">NBR 15715 · PEAD</span><span class="nbr-tag">NBR 5597 · GALV.</span></p>
-          <p>O valor de <strong style="color: var(--accent);">DN</strong> exibido no card de resultado é o que entra direto nas famílias do Revit.</p>
+          <p>Use os cards de material para ver o resultado em <strong>PVC rígido</strong>, <strong>PEAD corrugado</strong> ou <strong>aço galvanizado</strong>. As tabelas de Ø interno diferem entre materiais — uma bitola menor de aço pode atender o mesmo cálculo que uma bitola maior de PVC.</p>
+          <p><span class="nbr-tag">NBR 15465 · PVC</span><span class="nbr-tag">NBR 15715 · PEAD</span><span class="nbr-tag">NBR 5597 · GALV.</span></p>
         </div>
       </div>
     </div>
@@ -1049,11 +1215,6 @@
               <div class="readout-value muted" id="sistemas-diam">—<span class="readout-unit">mm</span></div>
               <div class="readout-sub">√(ΣD²·n / 1,00)</div>
             </div>
-          </div>
-
-          <div class="margin-row">
-            <span class="margin-row-label">◆ MARGEM DE SEGURANÇA · 10%</span>
-            <span>Ø alvo mínimo: <span class="margin-row-value" id="sistemas-alvo">— mm</span></span>
           </div>
 
           <div style="margin-top: 18px;">
@@ -1105,6 +1266,12 @@
                   Adicione cabos para calcular.<br>
                   Conforme NBR 5444 e NBR 15465.
                 </div>
+              </div>
+            </div>
+            <div class="bitola-strip" id="sistemas-bitola-strip" style="display:none;">
+              <div class="bitola-strip-label">
+                <span>◇ Testar outra bitola</span>
+                <button class="reset-btn" onclick="resetOverride('sistemas')">usar calculada</button>
               </div>
             </div>
           </div>
@@ -1462,10 +1629,302 @@
       </p>
       <div id="tabelas-materiais"></div>
       <p style="font-size: 11px; color: var(--ink-mute); margin: 14px 0 0; font-family: 'JetBrains Mono', monospace; line-height: 1.7;">
-        ▸ <strong style="color: var(--accent);">Ø interno</strong> é o valor usado no cálculo de ocupação. Valores conforme catálogos Tigre, Amanco, Elecon, Santa Marta, Kanaflex, Cimflex e normas ABNT.<br>
-        ▸ Galvanizado tem Ø interno <strong style="color: var(--ink);">maior</strong> que o PVC equivalente (paredes mais finas em relação ao Ø externo) — por isso uma bitola menor de aço pode atender o mesmo cálculo.<br>
-        ▸ PEAD é referenciado direto pelo DN comercial, sem padrão de polegada universal.
+        ▸ <strong style="color: var(--accent);">PVC Rígido:</strong> Di conforme catálogo técnico Tigre "Eletroduto Roscável" (pág. 59), validado contra NBR 15465. DN = diâmetro externo nominal.<br>
+        ▸ <strong style="color: #6bb6ff;">PEAD:</strong> Di médio de fabricantes (Kanaflex, Elecon) conforme NBR 15715. Confirme sempre com ficha técnica do fornecedor — Di varia entre marcas da mesma DN.<br>
+        ▸ <strong style="color: #ff6b3a;">Galvanizado:</strong> Di = De_ext − 2×parede, conforme NBR 5597. Galvanizado tem Ø interno <strong style="color: var(--ink);">maior</strong> que o PVC equivalente — possível usar bitola menor de aço para o mesmo cálculo.
       </p>
+    </div>
+
+    <!-- FÓRMULAS — KaTeX -->
+    <div class="method" style="margin-top: 24px;" id="formulas-block">
+      <h3>◆ Memória de Cálculo · Fórmulas e Passo a Passo</h3>
+      <p style="font-size: 13px; color: var(--ink-dim); margin: 0 0 22px; line-height: 1.6;">
+        Fórmulas renderizadas em notação matemática. Clique em qualquer aba para ver o desenvolvimento completo do cálculo com exemplo numérico.
+      </p>
+
+      <!-- sub-tabs de fórmulas -->
+      <div style="display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:24px;">
+        <button class="ftab active" data-ftab="eletroduto" style="background:none;border:none;border-bottom:2px solid var(--accent);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:10px 18px;cursor:pointer;">Eletroduto</button>
+        <button class="ftab" data-ftab="eletrocalha" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--ink-mute);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:10px 18px;cursor:pointer;">Eletrocalha</button>
+        <button class="ftab" data-ftab="agrupamento" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--ink-mute);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:10px 18px;cursor:pointer;">Agrupamento</button>
+      </div>
+
+      <!-- aba eletroduto -->
+      <div class="ftab-panel active" id="ftab-eletroduto">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Fórmula Geral</div>
+
+            <div class="katex-box" id="k-eletre-1"></div>
+            <p style="font-size:12px;color:var(--ink-dim);margin:10px 0 18px;line-height:1.6;">
+              Onde <span class="ki">D_i</span> é o diâmetro externo do cabo <span class="ki">i</span>, <span class="ki">n_i</span> a quantidade, e <span class="ki">f = 0{,}40</span> o fator de ocupação máximo da NBR 5410 (mais de 2 condutores, bandeja ou eletroduto).
+            </p>
+
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Ocupação Real</div>
+            <div class="katex-box" id="k-eletre-2"></div>
+            <p style="font-size:12px;color:var(--ink-dim);margin:10px 0 0;line-height:1.6;">
+              <span class="ki">D_{int}</span> é o diâmetro interno do eletroduto comercial selecionado. O critério D² é conservador — usa área do quadrado circunscrito ao cabo, não πD²/4.
+            </p>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:#c8a832;text-transform:uppercase;margin-bottom:14px;">Exemplo Numérico</div>
+            <div style="background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:16px 18px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-bottom:12px;line-height:1.7;">
+                Dados de entrada:<br>
+                · 3 cabos EPR 16mm² → D = 8,4 mm<br>
+                · 3 cabos PVC 2,5mm² → D = 3,5 mm
+              </div>
+              <div class="katex-box" id="k-eletre-ex1"></div>
+              <div class="katex-box" style="margin-top:10px;" id="k-eletre-ex2"></div>
+              <div class="katex-box" style="margin-top:10px;" id="k-eletre-ex3"></div>
+              <div style="margin-top:12px;padding:8px 10px;background:rgba(212,255,58,0.07);border:1px solid rgba(212,255,58,0.25);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">
+                → PVC Rígido 1" · DN 25 · Ø int = 27,5 mm ✓
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- aba eletrocalha -->
+      <div class="ftab-panel" id="ftab-eletrocalha" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Área de Ocupação</div>
+            <div class="katex-box" id="k-tray-1"></div>
+            <p style="font-size:12px;color:var(--ink-dim);margin:10px 0 18px;line-height:1.6;">
+              <span class="ki">A_{util}</span> é a área útil interna da eletrocalha (<span class="ki">L \times H</span>). O limite de 40% é o mesmo critério do eletroduto, agora aplicado à seção retangular da bandeja.
+            </p>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Área Mínima Necessária</div>
+            <div class="katex-box" id="k-tray-2"></div>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:#c8a832;text-transform:uppercase;margin-bottom:14px;">Exemplo Numérico</div>
+            <div style="background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:16px 18px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-bottom:12px;line-height:1.7;">
+                Dados de entrada:<br>
+                · 6 cabos EPR 50mm² → D = 13,3 mm<br>
+                · 4 cabos PVC 6mm² → D = 4,6 mm
+              </div>
+              <div class="katex-box" id="k-tray-ex1"></div>
+              <div class="katex-box" style="margin-top:10px;" id="k-tray-ex2"></div>
+              <div class="katex-box" style="margin-top:10px;" id="k-tray-ex3"></div>
+              <div style="margin-top:12px;padding:8px 10px;background:rgba(212,255,58,0.07);border:1px solid rgba(212,255,58,0.25);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">
+                → Eletrocalha 200×50 mm · área 10.000 mm² · ocup. 12,5% ✓
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- aba agrupamento -->
+      <div class="ftab-panel" id="ftab-agrupamento" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Corrente Corrigida · NBR 5410 Tab. 42/43</div>
+            <div class="katex-box" id="k-agrup-1"></div>
+            <p style="font-size:12px;color:var(--ink-dim);margin:10px 0 18px;line-height:1.6;">
+              <span class="ki">I_z</span> = corrente admissível tabelada (Tab. 36 NBR 5410) para o cabo isolado.<br>
+              <span class="ki">F_{a42}</span> = fator de agrupamento da Tabela 42 (bandeja perfurada, camada única) em função do número de cabos por camada.<br>
+              <span class="ki">F_{a43}</span> = fator adicional da Tabela 43 quando há mais de uma camada.
+            </p>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Fator Resultante</div>
+            <div class="katex-box" id="k-agrup-2"></div>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:#c8a832;text-transform:uppercase;margin-bottom:14px;">Exemplo · 3 camadas, 4 cabos/camada</div>
+            <div style="background:var(--bg);border:1px solid var(--line);border-radius:3px;padding:16px 18px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-dim);margin-bottom:12px;line-height:1.7;">
+                Cabo: EPR 35mm² · I_z = 131 A (Tab. 36)<br>
+                Camadas: 3 · Cabos/camada: 4
+              </div>
+              <div class="katex-box" id="k-agrup-ex1"></div>
+              <div class="katex-box" style="margin-top:10px;" id="k-agrup-ex2"></div>
+              <div class="katex-box" style="margin-top:10px;" id="k-agrup-ex3"></div>
+              <div style="margin-top:12px;padding:8px 10px;background:rgba(200,168,50,0.08);border:1px solid rgba(200,168,50,0.3);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#c8a832;line-height:1.6;">
+                → I_z corrigida = 103 A · redução de 21%<br>
+                Verificar se o cabo dimensionado suporta a corrente de projeto após correção.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FONTES E REFERÊNCIAS -->
+    <div class="method" style="margin-top: 24px;">
+      <h3>◆ Fontes e Referências · Links de Acesso Público</h3>
+      <p style="font-size: 13px; color: var(--ink-dim); margin: 0 0 20px; line-height: 1.6;">
+        Os dados técnicos desta calculadora foram verificados nas fontes abaixo — todas de acesso público e gratuito.
+        As <strong style="color: var(--ink);">normas ABNT</strong> (NBR 5410, NBR 5444, NBR 15465, NBR 15715, NBR 5597) têm direito autoral e devem ser adquiridas pela loja oficial
+        <a href="https://www.abntcatalogo.com.br" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">abntcatalogo.com.br</a>.
+        Aqui estão indicadas apenas a norma aplicável, a tabela e o ponto do documento onde encontrar a informação.
+      </p>
+
+      <!-- GRUPO: CATÁLOGOS DE FABRICANTES -->
+      <div style="margin-bottom: 28px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line-soft);">
+          <span style="display:inline-block;width:8px;height:8px;background:var(--accent);border-radius:50%;margin-right:8px;vertical-align:middle;box-shadow:0 0 8px var(--accent);"></span>
+          Catálogos de Fabricantes · Acesso Livre
+        </div>
+        <div style="display:grid;gap:10px;">
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1;">Tigre</div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Catálogo Técnico · Eletricidade Predial</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Di do PVC Rígido Roscável · <strong style="color:var(--ink);">Tabela pág. 59</strong> ("Eletroduto de PVC Rígido Roscável") · confirma todos os 9 diâmetros internos usados nesta calculadora.</div>
+            </div>
+            <a href="https://tigresite.s3.amazonaws.com/2021/12/predial_eletricidade_novo.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(212,255,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(212,255,58,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1;">Amanco</div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Ficha Técnica · Eletroduto Rígido Roscável (FTC000034)</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Confirma rosca padrão BSP (NBR 8133) e bitolas comerciais disponíveis. Utilizado como validação cruzada dos dados de bitola.</div>
+            </div>
+            <a href="https://bd-sp.canaldapeca.com.br/AMANCO/MANUAIS%20AMANCO/MANUAL%20AMANCO_3/297.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(212,255,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(212,255,58,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1;">Andaluz</div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Página de Produto · Eletroduto PVC Rígido Roscável</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Terceira confirmação independente dos Di: tabela com <strong style="color:var(--ink);">bitola / espessura / Di / comprimento</strong>. Valores idênticos à Tigre — consolidam a NBR 15465.</div>
+            </div>
+            <a href="https://andaluz.ind.br/produtos/eletroduto-de-pvc-rigido-roscavel/" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(212,255,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(212,255,58,0.1)'" onmouseout="this.style.background='transparent'">↗ Site</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1;">Elecon</div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Página de Produto · Eletroduto PVC NBR 15465</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Fonte dos <strong style="color:var(--ink);">DN nominais</strong> corretos da NBR 15465: 1/2"=DN 15 · 3/4"=DN 20 · 1"=DN 25 · ... · 4"=DN 100. Esses são os valores que entram no Revit.</div>
+            </div>
+            <a href="https://elecon.com.br/produto/eletroduto-pvc-nbr-15465/" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(212,255,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(212,255,58,0.1)'" onmouseout="this.style.background='transparent'">↗ Site</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- GRUPO: DISTRIBUIDORAS -->
+      <div style="margin-bottom: 28px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:#ff6b3a;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line-soft);">
+          <span style="display:inline-block;width:8px;height:8px;background:#ff6b3a;border-radius:50%;margin-right:8px;vertical-align:middle;box-shadow:0 0 8px #ff6b3a;"></span>
+          Normas de Distribuidoras · PDFs Públicos Gratuitos
+        </div>
+        <div style="display:grid;gap:10px;">
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#ff6b3a;line-height:1.2;text-align:center;">CEMIG<br><span style="font-size:10px;color:var(--ink-mute);">ND-5.1</span></div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Fornecimento em Tensão Secundária · Edificações Individuais</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;"><strong style="color:var(--ink);">§2.1.1</strong> — circuito trifásico completo (F+F+F+N) por eletroduto. <strong style="color:var(--ink);">§2.1.2</strong> — comprimentos idênticos por fase em condutos paralelos. Base normativa da funcionalidade de divisão de condutos.</div>
+            </div>
+            <a href="https://pt.scribd.com/document/274095239/ND-5-1-CEMIG" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff6b3a;border:1px solid rgba(255,107,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(255,107,58,0.1)'" onmouseout="this.style.background='transparent'">↗ Scribd</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#ff6b3a;line-height:1.2;text-align:center;">CEMIG<br><span style="font-size:10px;color:var(--ink-mute);">ND-5.5</span></div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Fornecimento em Tensão Secundária · Rede Subterrânea</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Prevê proteção geral com <strong style="color:var(--ink);">dois ou três disjuntores de 300A</strong> — implica múltiplos condutos em paralelo. PDF direto no site da Cemig.</div>
+            </div>
+            <a href="https://www.cemig.com.br/wp-content/uploads/2025/10/nd5_5_000001p.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff6b3a;border:1px solid rgba(255,107,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(255,107,58,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#ff6b3a;line-height:1.2;text-align:center;">CPFL<br><span style="font-size:10px;color:var(--ink-mute);">GED-119</span></div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Fornecimento de Energia a Edifícios de Uso Coletivo</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Critérios de ramal de entrada subterrâneo, tipos de fornecimento BT, tabelas de dimensionamento. Versão 2.7 — Jul/2014. PDF no site CPFL.</div>
+            </div>
+            <a href="https://www2.cpfl.com.br/sites/cpfl/files/2021-12/ged-119-fornecimento-de-energia-eletrica-a-edificios-de-uso-coletivo.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff6b3a;border:1px solid rgba(255,107,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(255,107,58,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#ff6b3a;line-height:1.2;text-align:center;">CPFL<br><span style="font-size:10px;color:var(--ink-mute);">GED-10126</span></div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Ramal de Entrada Subterrâneo · Tensão Secundária</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">"Somente são permitidos circuitos com cabos únicos (um por fase e neutro), não sendo permitido duplicar, triplicar, quadruplicar, etc." — restrição ao ramal entre poste e medidor.</div>
+            </div>
+            <a href="https://pt.scribd.com/document/341313891/GED-10126-pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff6b3a;border:1px solid rgba(255,107,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(255,107,58,0.1)'" onmouseout="this.style.background='transparent'">↗ Scribd</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#ff6b3a;line-height:1.2;text-align:center;">COPEL<br><span style="font-size:10px;color:var(--ink-mute);">NTC 901100</span></div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Fornecimento em Tensão Secundária · Paraná</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Critérios gerais de fornecimento BT, tipos de atendimento, dimensionamento de padrão de entrada. Tabelas de seções mínimas e eletrodutos.</div>
+            </div>
+            <a href="http://eletrica.ufpr.br/sebastiao/wa_files/ntc%20901100%20fornecimento%20em%20tensao%20secundaria.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff6b3a;border:1px solid rgba(255,107,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(255,107,58,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF (UFPR)</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- GRUPO: TABELAS TÉCNICAS PÚBLICAS -->
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:#6bb6ff;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line-soft);">
+          <span style="display:inline-block;width:8px;height:8px;background:#6bb6ff;border-radius:50%;margin-right:8px;vertical-align:middle;box-shadow:0 0 8px #6bb6ff;"></span>
+          Tabelas Técnicas · Material de Apoio Público
+        </div>
+        <div style="display:grid;gap:10px;">
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#6bb6ff;line-height:1.2;text-align:center;">NBR<br>5410<br><span style="font-size:9px;color:var(--ink-mute);">Tabelas</span></div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Tabelas Completas NBR 5410 · Guia da Engenharia</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;"><strong style="color:var(--ink);">Tabela 42</strong> — fatores de agrupamento bandeja perfurada (1 camada). <strong style="color:var(--ink);">Tabela 43</strong> — fatores para múltiplas camadas. Esses fatores estão implementados na aba Eletrocalha desta calculadora.</div>
+            </div>
+            <a href="https://www.guiadaengenharia.com/wp-content/uploads/2019/02/tabelas-completas-5410.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6bb6ff;border:1px solid rgba(107,182,255,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(107,182,255,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#6bb6ff;line-height:1.2;text-align:center;">Equiv.<br>PVC<br><span style="font-size:9px;color:var(--ink-mute);">Voltt</span></div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Tabela de Equivalência de Eletrodutos de PVC Rígido · Voltt Engenharia</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Tabela de referência histórica com colunas COPEL e TELEPAR. Utilizada para confrontar os valores legados da planilha original (R03) com os dados atuais da NBR 15465.</div>
+            </div>
+            <a href="https://volttengenharia.com.br/wp-content/uploads/2018/05/Tabela-de-equivalencia-de-eletrodutos-pvc.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6bb6ff;border:1px solid rgba(107,182,255,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(107,182,255,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NOTA SOBRE NORMAS ABNT -->
+      <div style="margin-top:20px;padding:14px 18px;background:rgba(212,255,58,0.04);border:1px solid rgba(212,255,58,0.15);border-radius:3px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);margin-bottom:8px;">◆ Normas ABNT · Onde adquirir</div>
+        <p style="font-size:12px;color:var(--ink-dim);margin:0;line-height:1.7;">
+          As normas técnicas ABNT têm direito autoral e não são distribuídas gratuitamente. Nesta calculadora elas são identificadas apenas por número, tabela e seção — a informação normativa exata deve ser verificada na norma adquirida.
+          <br>Para comprar: <a href="https://www.abntcatalogo.com.br" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:600;">abntcatalogo.com.br</a> —
+          busque por <em>NBR 5410</em> (instalações BT), <em>NBR 15465</em> (eletrodutos plásticos), <em>NBR 5597</em> (eletroduto galvanizado), <em>NBR 15715</em> (eletrodutos PEAD).
+        </p>
+      </div>
+
     </div>
 
   </section>
@@ -1545,19 +2004,21 @@ const MATERIAIS = {
   pvc: {
     nome: 'PVC Rígido',
     sub: 'Tigre · Amanco · Krona · Elecon',
-    norma: 'NBR 5444 / NBR 15465',
+    norma: 'NBR 15465 / NBR 5410',
     cor: '#d4ff3a',
     aplicacao: 'Interno embutido em alvenaria e laje · circuitos terminais e alimentadores prediais.',
+    // Di conforme catálogo Tigre (pág.59), Andaluz e NBR 15465 — valores idênticos nas três fontes
+    // DN conforme NBR 15465 tabela Elecon: é um número nominal convencional, ≠ Ø externo
     bitolas: [
-      { pol: '1/2"',   dn: 15,  int_d: 13.0 },
-      { pol: '3/4"',   dn: 20,  int_d: 16.0 },
-      { pol: '1"',     dn: 25,  int_d: 21.0 },
-      { pol: '1.1/4"', dn: 32,  int_d: 27.0 },
-      { pol: '1.1/2"', dn: 40,  int_d: 33.0 },
-      { pol: '2"',     dn: 50,  int_d: 37.0 },
-      { pol: '2.1/2"', dn: 60,  int_d: 53.0 },
-      { pol: '3"',     dn: 75,  int_d: 62.0 },
-      { pol: '4"',     dn: 100, int_d: 78.0 },
+      { pol: '1/2"',   dn: 15,  int_d: 16.4 },
+      { pol: '3/4"',   dn: 20,  int_d: 21.3 },
+      { pol: '1"',     dn: 25,  int_d: 27.5 },
+      { pol: '1.1/4"', dn: 32,  int_d: 36.1 },
+      { pol: '1.1/2"', dn: 40,  int_d: 41.4 },
+      { pol: '2"',     dn: 50,  int_d: 52.8 },
+      { pol: '2.1/2"', dn: 65,  int_d: 67.1 },
+      { pol: '3"',     dn: 80,  int_d: 79.6 },
+      { pol: '4"',     dn: 100, int_d: 103.1 },
     ]
   },
   pead: {
@@ -1566,24 +2027,25 @@ const MATERIAIS = {
     norma: 'NBR 15715',
     cor: '#6bb6ff',
     aplicacao: 'Enterrado em vala · redes subterrâneas de energia e dados · travessias e infraestrutura externa.',
+    // Di conforme catálogos Kanaflex/Elecon NBR 15715 — valores médios de fabricantes
     bitolas: [
-      { pol: 'DN 20',  dn: 20,  int_d: 17.5 },
-      { pol: 'DN 25',  dn: 25,  int_d: 22.0 },
-      { pol: 'DN 32',  dn: 32,  int_d: 28.5 },
-      { pol: 'DN 40',  dn: 40,  int_d: 36.0 },
-      { pol: 'DN 50',  dn: 50,  int_d: 43.0 },
-      { pol: 'DN 63',  dn: 63,  int_d: 55.0 },
-      { pol: 'DN 75',  dn: 75,  int_d: 65.0 },
-      { pol: 'DN 90',  dn: 90,  int_d: 78.0 },
-      { pol: 'DN 110', dn: 110, int_d: 96.0 },
+      { pol: 'DN 32',  dn: 32,  int_d: 26.0 },
+      { pol: 'DN 40',  dn: 40,  int_d: 33.0 },
+      { pol: 'DN 50',  dn: 50,  int_d: 41.5 },
+      { pol: 'DN 63',  dn: 63,  int_d: 52.0 },
+      { pol: 'DN 75',  dn: 75,  int_d: 63.0 },
+      { pol: 'DN 90',  dn: 90,  int_d: 76.0 },
+      { pol: 'DN 110', dn: 110, int_d: 93.0 },
+      { pol: 'DN 125', dn: 125, int_d: 107.0 },
     ]
   },
   galv: {
     nome: 'Aço Galvanizado',
     sub: 'Santa Marta · Apolo · Perfil Líder · Megaduto',
-    norma: 'NBR 5597 (NPT) / NBR 5598 (BSP)',
+    norma: 'NBR 5597 (rosca NPT) / NBR 5598 (rosca BSP)',
     cor: '#ff6b3a',
-    aplicacao: 'Aparente em indústria · áreas classificadas atmosfera explosiva · alta resistência mecânica.',
+    aplicacao: 'Aparente em indústria · áreas classificadas · atmosfera explosiva · alta resistência mecânica.',
+    // Di = De_ext − 2×espessura_parede · conforme NBR 5597 e catálogo Santa Marta
     bitolas: [
       { pol: '1/2"',   dn: 15,  int_d: 16.8 },
       { pol: '3/4"',   dn: 20,  int_d: 22.4 },
@@ -1598,11 +2060,74 @@ const MATERIAIS = {
   }
 };
 
-// Margem de segurança aplicada ao Ø calculado
-const MARGEM_SEGURANCA = 0.10; // 10% conservador
+// Seleção de bitola: menor bitola cujo Ø interno ≥ Ø calculado
+// A NBR 5410 já incorpora a margem de segurança no limite de 40%
 
 // Material selecionado por aba (estado global)
 const matSelecionado = { energia: 'pvc', sistemas: 'pvc' };
+
+// Override manual de bitola (null = usa a calculada)
+const bitolaOverride = { energia: null, sistemas: null };
+
+function resetOverride(prefix) {
+  bitolaOverride[prefix] = null;
+  recalcAll();
+}
+
+function renderBitolaStrip(prefix, matKey, somaPerConduto, diamCalc) {
+  const strip = document.getElementById(`${prefix}-bitola-strip`);
+  if (!strip || !somaPerConduto) { if (strip) strip.style.display = 'none'; return; }
+  strip.style.display = 'flex';
+
+  const mat = MATERIAIS[matKey];
+  const overrideIdx = bitolaOverride[prefix];
+  // Recomendada = menor bitola cujo Ø int >= Ø calculado (sem margem extra)
+  const recIdx = mat.bitolas.findIndex(b => b.int_d >= diamCalc);
+
+  Array.from(strip.children).slice(1).forEach(c => c.remove());
+
+  mat.bitolas.forEach((b, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'bitola-btn';
+    btn.dataset.idx = i;
+    const pct = (somaPerConduto / (b.int_d * b.int_d)) * 100;
+    btn.innerHTML = `<div>${b.pol}</div><div style="font-size:9px;opacity:.65">DN${b.dn}</div>`;
+    btn.title = `Ø int = ${b.int_d}mm · ocupação = ${pct.toFixed(1)}%`;
+
+    const isSelected = overrideIdx !== null ? overrideIdx === i : recIdx === i;
+    const isTight = b.int_d < diamCalc; // abaixo do mínimo NBR (ocupação > 40%)
+    if (isSelected) btn.classList.add('selected');
+    if (i === recIdx) btn.classList.add('recommended');
+    if (isTight && !isSelected) btn.classList.add('tight');
+
+    btn.addEventListener('click', () => {
+      bitolaOverride[prefix] = i;
+      recalcAll();
+    });
+    strip.appendChild(btn);
+  });
+}
+
+function resolveComercial(prefix, matKey, diamCalc) {
+  const mat = MATERIAIS[matKey];
+  const overrideIdx = bitolaOverride[prefix];
+  if (overrideIdx !== null && overrideIdx < mat.bitolas.length) {
+    const b = mat.bitolas[overrideIdx];
+    return { ...b, folga: b.int_d - diamCalc, folgaPct: (b.int_d / diamCalc - 1) * 100, _manual: true };
+  }
+  return findEletrodutoComercial(diamCalc, matKey);
+}
+
+// Estado de condutos paralelos (aba Energia)
+const energiaState = { numCondutos: 1 };
+
+// Textos normativos por nº de condutos — baseados em CEMIG ND-5.1, ND-5.5 e NBR 5410
+const CONDUTOS_NORMA = {
+  1: 'Circuito completo no mesmo eletroduto (F1+F2+F3+N). Configuração padrão conforme CEMIG ND-5.1 §2.1.1.',
+  2: 'Dois condutos paralelos, cada um com circuito trifásico completo (F1+F2+F3+N). Os condutores de mesma fase devem ter comprimentos idênticos (CEMIG ND-5.1 §2.1.2). CPFL GED-10126 proíbe a divisão apenas por fase — cada duto deve conter as 3 fases + neutro.',
+  3: 'Três condutos em paralelo, cada um com F1+F2+F3+N. Aplicável em demandas elevadas onde cabos de seção única atingiriam bitolas inviáveis (> 150mm² Cu). Verificar com a concessionária (ANEEL REN 1000/2021). Comprimentos idênticos obrigatórios.',
+  4: 'Quatro condutos paralelos com circuito completo cada. Típico em ramais de grande porte (edifícios de uso coletivo, ≥ 600A). CEMIG ND-5.5 prevê proteção geral com dois disjuntores de 300A ou três de 300A — o projetista define a divisão de condutos em projeto específico aprovado pela concessionária.',
+};
 
 // Estado de empilhamento da eletrocalha
 const trayState = { camadas: 1 };
@@ -1758,6 +2283,28 @@ function initInputs() {
     inp.addEventListener('input', recalcAll);
   });
 
+  // Listeners — botões de condutos paralelos (EE)
+  document.querySelectorAll('[data-condutos]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-condutos]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      energiaState.numCondutos = parseInt(btn.dataset.condutos);
+      // Atualizar texto normativo no banner de entrada
+      const regra = document.getElementById('condutos-regra');
+      if (regra) {
+        const n = energiaState.numCondutos;
+        const textos = {
+          1: '1 conduto · circuito completo F1+F2+F3+N',
+          2: '2 condutos · cada um com F1+F2+F3+N · comprimentos idênticos',
+          3: '3 condutos · cada um com F1+F2+F3+N · aprovar com concessionária',
+          4: '4 condutos · cada um com F1+F2+F3+N · projeto aprovado obrigatório',
+        };
+        regra.textContent = textos[n] ?? textos[4];
+      }
+      updateEnergia();
+    });
+  });
+
   // Listeners — botões de camadas
   document.querySelectorAll('.layer-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1779,6 +2326,7 @@ function initInputs() {
         sel.querySelectorAll('.mat-card').forEach(c => c.classList.remove('active'));
         card.classList.add('active');
         matSelecionado[target] = card.dataset.mat;
+        bitolaOverride[target] = null; // reset ao trocar material
         recalcAll();
       });
     });
@@ -1809,14 +2357,13 @@ function calcDiametroEletroduto(somaQuad, fator) {
 }
 
 function findEletrodutoComercial(diamCalc, materialKey) {
-  const diamAlvo = diamCalc * (1 + MARGEM_SEGURANCA);
   const tabela = MATERIAIS[materialKey].bitolas;
   for (const e of tabela) {
-    if (e.int_d >= diamAlvo) {
-      return { ...e, diamAlvo, folga: e.int_d - diamCalc, folgaPct: (e.int_d / diamCalc - 1) * 100 };
+    if (e.int_d >= diamCalc) {
+      return { ...e, folga: e.int_d - diamCalc, folgaPct: (e.int_d / diamCalc - 1) * 100 };
     }
   }
-  return null; // acima da maior bitola do material
+  return null;
 }
 
 function findEletrocalhasCompativeis(somaQuad, limite = 0.40) {
@@ -1850,20 +2397,31 @@ function setCommercialResult(prefix, comercial, soma, materialKey) {
     const areaInt = comercial.int_d * comercial.int_d;
     const pctReal = (soma / areaInt) * 100;
     const folgaColor = comercial.folgaPct >= 10 ? 'var(--ok)' : (comercial.folgaPct >= 5 ? 'var(--warn)' : 'var(--err)');
+    const isManual = !!comercial._manual;
+    const isTight  = comercial.folga < 0; // Ø int < Ø calc — abaixo do mínimo
+
+    let warnHtml = '';
+    if (isManual && isTight) {
+      warnHtml = `<div style="color:var(--err);font-weight:700;margin-top:6px;">⚠ ABAIXO DO MÍNIMO — ocupação ${pctReal.toFixed(1)}% &gt; 40%</div>`;
+    } else if (isManual) {
+      warnHtml = `<div style="color:var(--warn);margin-top:6px;">◇ Bitola escolhida manualmente</div>`;
+    }
+
     cm.querySelector('[data-field="spec"]').innerHTML = `
-      <div style="color: var(--ink); font-weight: 700; margin-bottom: 6px;">Ø interno · ${comercial.int_d.toFixed(1)} mm</div>
-      <div style="color: var(--ink-dim);">${mat.nome}</div>
-      <div style="color: var(--ink-dim);">Ocupação · ${pctReal.toFixed(1)}%</div>
-      <div style="color: ${folgaColor}; margin-top: 4px;">Folga · +${comercial.folga.toFixed(1)} mm (${comercial.folgaPct.toFixed(1)}%)</div>
+      <div style="color:var(--ink);font-weight:700;margin-bottom:6px;">Ø interno · ${comercial.int_d.toFixed(1)} mm</div>
+      <div style="color:var(--ink-dim);">${mat.nome}</div>
+      <div style="color:var(--ink-dim);">Ocupação · ${pctReal.toFixed(1)}%</div>
+      <div style="color:${folgaColor};margin-top:4px;">Folga · ${comercial.folga >= 0 ? '+' : ''}${comercial.folga.toFixed(1)} mm (${comercial.folgaPct.toFixed(1)}%)</div>
+      ${warnHtml}
     `;
     return pctReal;
   } else {
     cm.querySelector('[data-field="pol"]').textContent = '—';
     cm.querySelector('[data-field="dn"]').innerHTML = '—<sup>mm</sup>';
     cm.querySelector('[data-field="spec"]').innerHTML = `
-      <div style="color: var(--warn); font-weight: 700;">Acima da maior bitola</div>
-      <div style="color: var(--ink-dim);">${mat.nome}</div>
-      <div style="color: var(--ink-dim); margin-top: 4px;">Dividir circuitos em mais<br>de um eletroduto, ou trocar material.</div>
+      <div style="color:var(--warn);font-weight:700;">Acima da maior bitola</div>
+      <div style="color:var(--ink-dim);">${mat.nome}</div>
+      <div style="color:var(--ink-dim);margin-top:4px;">Dividir circuitos em mais<br>de um eletroduto, ou trocar material.</div>
     `;
     return null;
   }
@@ -1873,9 +2431,37 @@ function updateEnergia() {
   const pvc = getCablesData('pvc');
   const epr = getCablesData('epr');
   const all = [...pvc, ...epr];
-  const soma = calcSomaQuadrada(all);
+  const somaTotal = calcSomaQuadrada(all);
+  const numCondutos = energiaState.numCondutos;
 
-  if (soma === 0) {
+  // Cada conduto recebe cabos/n (divisão uniforme entre condutos)
+  // Conforme CEMIG ND-5.1 §2.1.1: cada conduto tem circuito trifásico completo
+  // Logo a soma D²·n por conduto = somaTotal / numCondutos
+  const somaPerConduto = somaTotal / numCondutos;
+
+  // Atualizar box de condutos paralelos
+  const condBox = document.getElementById('energia-condutos-box');
+  if (numCondutos > 1 && somaTotal > 0) {
+    condBox.style.display = 'block';
+    document.getElementById('ec-num').textContent = numCondutos;
+    // Descrever os cabos por conduto
+    const cabosDesc = all.map(c => {
+      const nPorConduto = c.qty / numCondutos;
+      const nInt = Math.ceil(nPorConduto);
+      return `${nInt}× Ø${c.diam.toFixed(1)}mm`;
+    }).join(' · ');
+    document.getElementById('ec-cabos').textContent = cabosDesc || '—';
+    // Bitola do conduto individual
+    const diamCond = calcDiametroEletroduto(somaPerConduto, 0.40);
+    const matKey = matSelecionado.energia;
+    const comCond = findEletrodutoComercial(diamCond, matKey);
+    document.getElementById('ec-bitola').textContent = comCond ? `${comCond.pol}` : '> 4"';
+    document.getElementById('ec-norma-text').textContent = CONDUTOS_NORMA[numCondutos] ?? CONDUTOS_NORMA[4];
+  } else {
+    condBox.style.display = 'none';
+  }
+
+  if (somaTotal === 0) {
     document.getElementById('energia-soma').textContent = '—';
     document.getElementById('energia-soma').classList.add('muted');
     document.getElementById('energia-diam').innerHTML = '—<span class="readout-unit">mm</span>';
@@ -1890,23 +2476,23 @@ function updateEnergia() {
     return;
   }
 
-  const diamCalc = calcDiametroEletroduto(soma, 0.40);
+  const diamCalc = calcDiametroEletroduto(somaPerConduto, 0.40);
   const matKey = matSelecionado.energia;
-  const comercial = findEletrodutoComercial(diamCalc, matKey);
+  const comercial = resolveComercial('energia', matKey, diamCalc);
 
-  document.getElementById('energia-soma').textContent = soma.toFixed(1);
+  // Label dinâmico — soma por conduto
+  document.getElementById('energia-soma').textContent = somaPerConduto.toFixed(1);
   document.getElementById('energia-soma').classList.remove('muted');
   document.getElementById('energia-diam').innerHTML = `${diamCalc.toFixed(1)}<span class="readout-unit">mm</span>`;
   document.getElementById('energia-diam').classList.remove('muted');
-  document.getElementById('energia-status').textContent = 'CALCULADO';
+  document.getElementById('energia-status').textContent = numCondutos > 1 ? `${numCondutos}× CONDUTOS` : 'CALCULADO';
 
-  // Atualiza o Ø alvo exibido (com margem)
-  const diamAlvoEl = document.getElementById('energia-alvo');
-  if (diamAlvoEl) diamAlvoEl.textContent = `${(diamCalc * (1 + MARGEM_SEGURANCA)).toFixed(1)} mm`;
+  // Strip de bitolas
+  renderBitolaStrip('energia', matKey, somaPerConduto, diamCalc);
 
-  const pctReal = setCommercialResult('energia', comercial, soma, matKey);
+  const pctReal = setCommercialResult('energia', comercial, somaPerConduto, matKey);
 
-  // fill bar — escala onde 40% (limite NBR) preenche 100% da barra
+  // fill bar
   const fb = document.getElementById('energia-fill-bar');
   const fp = document.getElementById('energia-fill-pct');
   if (pctReal !== null) {
@@ -1944,7 +2530,7 @@ function updateSistemas() {
 
   const diamCalc = calcDiametroEletroduto(soma, 1.0);
   const matKey = matSelecionado.sistemas;
-  const comercial = findEletrodutoComercial(diamCalc, matKey);
+  const comercial = resolveComercial('sistemas', matKey, diamCalc);
 
   document.getElementById('sistemas-soma').textContent = soma.toFixed(1);
   document.getElementById('sistemas-soma').classList.remove('muted');
@@ -1952,8 +2538,7 @@ function updateSistemas() {
   document.getElementById('sistemas-diam').classList.remove('muted');
   document.getElementById('sistemas-status').textContent = 'CALCULADO';
 
-  const diamAlvoEl = document.getElementById('sistemas-alvo');
-  if (diamAlvoEl) diamAlvoEl.textContent = `${(diamCalc * (1 + MARGEM_SEGURANCA)).toFixed(1)} mm`;
+  renderBitolaStrip('sistemas', matKey, soma, diamCalc);
 
   const pctReal = setCommercialResult('sistemas', comercial, soma, matKey);
 
@@ -2124,6 +2709,85 @@ document.querySelectorAll('.tab').forEach(btn => {
 document.addEventListener('DOMContentLoaded', () => {
   initInputs();
   recalcAll();
+});
+
+/* ============================================================
+ * KATEX — fórmulas passo a passo na aba Referência
+ * ============================================================ */
+
+// Espera KaTeX carregar (é defer) e então renderiza
+window.addEventListener('load', () => {
+  if (typeof katex === 'undefined') return;
+  const K = (el, tex, display = true) => {
+    const node = document.getElementById(el);
+    if (!node) return;
+    katex.render(tex, node, { displayMode: display, throwOnError: false });
+  };
+
+  /* ---- ELETRODUTO ---- */
+  K('k-eletre-1',
+    String.raw`\emptyset_{\text{calc}} = \sqrt{\dfrac{\displaystyle\sum_{i=1}^{n} D_i^2 \cdot n_i}{f}}, \quad f = 0{,}40`
+  );
+  K('k-eletre-2',
+    String.raw`\eta = \frac{\displaystyle\sum_{i} D_i^2 \cdot n_i}{D_{\text{int}}^2} \times 100 \leq 40\%`
+  );
+  K('k-eletre-ex1',
+    String.raw`\Sigma = 3 \times 8{,}4^2 + 3 \times 3{,}5^2 = 211{,}68 + 36{,}75 = 248{,}43\ \text{mm}^2`
+  );
+  K('k-eletre-ex2',
+    String.raw`\emptyset_{\text{calc}} = \sqrt{\dfrac{248{,}43}{0{,}40}} = \sqrt{621{,}1} \approx 24{,}9\ \text{mm}`
+  );
+  K('k-eletre-ex3',
+    String.raw`\eta = \frac{248{,}43}{27{,}5^2} \times 100 = \frac{248{,}43}{756{,}25} \times 100 \approx 32{,}8\%\ \checkmark`
+  );
+
+  /* ---- ELETROCALHA ---- */
+  K('k-tray-1',
+    String.raw`\eta_{\text{band}} = \frac{\displaystyle\sum_{i} D_i^2 \cdot n_i}{L \times H} \times 100 \leq 40\%`
+  );
+  K('k-tray-2',
+    String.raw`A_{\min} = \frac{\displaystyle\sum_{i} D_i^2 \cdot n_i}{0{,}40}`
+  );
+  K('k-tray-ex1',
+    String.raw`\Sigma = 6 \times 13{,}3^2 + 4 \times 4{,}6^2 = 1061{,}1 + 84{,}6 = 1145{,}7\ \text{mm}^2`
+  );
+  K('k-tray-ex2',
+    String.raw`A_{\min} = \frac{1145{,}7}{0{,}40} = 2864\ \text{mm}^2`
+  );
+  K('k-tray-ex3',
+    String.raw`\eta_{200 \times 50} = \frac{1145{,}7}{200 \times 50} \times 100 = \frac{1145{,}7}{10000} \times 100 = 11{,}5\%\ \checkmark`
+  );
+
+  /* ---- AGRUPAMENTO ---- */
+  K('k-agrup-1',
+    String.raw`I_{z,\text{corr}} = I_z \times F_{a42} \times F_{a43}`
+  );
+  K('k-agrup-2',
+    String.raw`F_a = F_{a42} \times F_{a43}, \quad F_a \leq 1{,}00`
+  );
+  K('k-agrup-ex1',
+    String.raw`F_{a42}\ (4\ \text{cabos/camada, bandeja perf.}) = 0{,}77\ \text{(Tab. 42)}`
+  );
+  K('k-agrup-ex2',
+    String.raw`F_{a43}\ (3\ \text{camadas},\ 4\ \text{cab./cam.}) = 0{,}77\ \text{(Tab. 43)}`
+  );
+  K('k-agrup-ex3',
+    String.raw`I_{z,\text{corr}} = 131 \times 0{,}77 \times 0{,}77 = 131 \times 0{,}593 \approx 78\ \text{A}`
+  );
+
+  /* ---- SUB-TABS DE FÓRMULAS ---- */
+  document.querySelectorAll('.ftab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ftab').forEach(b => {
+        b.classList.remove('active');
+        b.style.borderBottomColor = 'transparent';
+        b.style.color = 'var(--ink-mute)';
+      });
+      document.querySelectorAll('.ftab-panel').forEach(p => p.style.display = 'none');
+      btn.classList.add('active');
+      document.getElementById('ftab-' + btn.dataset.ftab).style.display = 'block';
+    });
+  });
 });
 </script>
 
