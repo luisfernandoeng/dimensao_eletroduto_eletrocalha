@@ -1630,7 +1630,7 @@
       <div id="tabelas-materiais"></div>
       <p style="font-size: 11px; color: var(--ink-mute); margin: 14px 0 0; font-family: 'JetBrains Mono', monospace; line-height: 1.7;">
         ▸ <strong style="color: var(--accent);">PVC Rígido:</strong> Di conforme catálogo técnico Tigre "Eletroduto Roscável" (pág. 59), validado contra NBR 15465. DN = diâmetro externo nominal.<br>
-        ▸ <strong style="color: #6bb6ff;">PEAD:</strong> Di médio de fabricantes (Kanaflex, Elecon) conforme NBR 15715. Confirme sempre com ficha técnica do fornecedor — Di varia entre marcas da mesma DN.<br>
+        ▸ <strong style="color: #6bb6ff;">PEAD:</strong> Di adotado = <em>menor</em> diâmetro interno entre os catálogos consultados (Kanaflex Kanaduto/E, Techduto NBR, Politejo Ambiduto) — o Di varia até ~5 mm entre marcas na mesma DN, então o menor valor garante a ocupação ≤ 40% com qualquer fabricante. Na NBR 15715 o DN é o Ø <em>externo</em>; na NBR 13897 a designação é pelo Ø <em>interno</em> (o "duto de 75 mm" do mercado é nomenclatura 13897, Di ≈ 75 mm). DN 32 está fora da NBR 15715 e DN 75 só existe em alguns fabricantes — confirme disponibilidade e Di na ficha técnica.<br>
         ▸ <strong style="color: #ff6b3a;">Galvanizado:</strong> Di = De_ext − 2×parede, conforme NBR 5597. Galvanizado tem Ø interno <strong style="color: var(--ink);">maior</strong> que o PVC equivalente — possível usar bitola menor de aço para o mesmo cálculo.
       </p>
     </div>
@@ -1811,6 +1811,39 @@
             <a href="https://elecon.com.br/produto/eletroduto-pvc-nbr-15465/" target="_blank" rel="noopener"
                style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);border:1px solid rgba(212,255,58,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
                onmouseover="this.style.background='rgba(212,255,58,0.1)'" onmouseout="this.style.background='transparent'">↗ Site</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#6bb6ff;line-height:1;">Kanaflex</div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Catálogo Kanaduto/E · Duto PEAD Corrugado (NBR 15715)</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Tabela com <strong style="color:var(--ink);">DN / Ø interno / Ø externo</strong> da linha em rolo: 32→24,0 · 40→31,5 · 50→41,5 · 63→53,0 · 90→75,0 · 110→95,0 · 125→107,5 · 140→123,0 · 160→138,0. Nota do próprio catálogo: <strong style="color:var(--ink);">DN 32 não é contemplado na NBR 15715</strong>. Linha Kanalex (helicoidal) tem designações distintas — NBR 13897 pelo Di, NBR 15715 pelo De.</div>
+            </div>
+            <a href="https://www.kanaflex.com.br/wp-content/uploads/2025/06/Catalogo-Kanaduto-E-Kanaflex.pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6bb6ff;border:1px solid rgba(107,182,255,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(107,182,255,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#6bb6ff;line-height:1;">Techduto</div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Tabela Técnica · Tubo Corrugado em PEAD (linha NBR)</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Tabela na página do produto com <strong style="color:var(--ink);">bitola / DN / De / Di</strong>: 40→30,3 · 50→40,7 · 63→52,3 · 90→75,0 · 110→94,0 · 125→104,0 · 140→120,0 · 160→135,0 · 200→170,5 · 250→215,0. Inclui também linha EL (20/25/32) fora da NBR 15715 e DN 100 (Di 83,0) específico da marca.</div>
+            </div>
+            <a href="https://techduto.com.br/produto/tubo-corrugado-em-pead/" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6bb6ff;border:1px solid rgba(107,182,255,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(107,182,255,0.1)'" onmouseout="this.style.background='transparent'">↗ Site</a>
+          </div>
+
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:3px;">
+            <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#6bb6ff;line-height:1;">Politejo</div>
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink);margin-bottom:3px;">Catálogo Ambiduto · Duto PEAD 450N / 680N (NBR 15715)</div>
+              <div style="font-size:12px;color:var(--ink-dim);line-height:1.5;">Única fonte com <strong style="color:var(--ink);">Ø interno MÍNIMO</strong> declarado por DN (base desta calculadora): 40→30,0 · 50→37,0 · 63→49,0 · <strong style="color:var(--ink);">75→56,0</strong> · 90→72,0 · 110→92,0 · 125→102,0 · 160→135,0 · 200→167,0 · 250→200,0. Único dos três com DN 75 na linha NBR 15715.</div>
+            </div>
+            <a href="https://www.politejo.com/zArchives/Pages/34/Files/Cata%CC%81logo%20Ambiduto%20(BR).pdf" target="_blank" rel="noopener"
+               style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6bb6ff;border:1px solid rgba(107,182,255,0.3);padding:5px 10px;border-radius:2px;text-decoration:none;white-space:nowrap;transition:all .15s ease;"
+               onmouseover="this.style.background='rgba(107,182,255,0.1)'" onmouseout="this.style.background='transparent'">↗ PDF</a>
           </div>
 
         </div>
@@ -2023,20 +2056,27 @@ const MATERIAIS = {
   },
   pead: {
     nome: 'PEAD Corrugado',
-    sub: 'Kanaflex · Cimflex · Techduto · Cimduto',
+    sub: 'Kanaflex · Techduto · Politejo',
     norma: 'NBR 15715',
     cor: '#6bb6ff',
     aplicacao: 'Enterrado em vala · redes subterrâneas de energia e dados · travessias e infraestrutura externa.',
-    // Di conforme catálogos Kanaflex/Elecon NBR 15715 — valores médios de fabricantes
+    // Di = MENOR diâmetro interno entre fabricantes consultados (Kanaflex Kanaduto/E,
+    // Techduto linha NBR, Politejo Ambiduto Di mín. NBR 15715) — garante que a bitola
+    // recomendada atenda qualquer marca. Na NBR 15715 o DN refere-se ao Ø EXTERNO.
+    // Obs.: DN 32 fora da NBR 15715 (Kanaflex) · DN 75 disponível apenas em alguns fabricantes (Politejo)
     bitolas: [
-      { pol: 'DN 32',  dn: 32,  int_d: 26.0 },
-      { pol: 'DN 40',  dn: 40,  int_d: 33.0 },
-      { pol: 'DN 50',  dn: 50,  int_d: 41.5 },
-      { pol: 'DN 63',  dn: 63,  int_d: 52.0 },
-      { pol: 'DN 75',  dn: 75,  int_d: 63.0 },
-      { pol: 'DN 90',  dn: 90,  int_d: 76.0 },
-      { pol: 'DN 110', dn: 110, int_d: 93.0 },
-      { pol: 'DN 125', dn: 125, int_d: 107.0 },
+      { pol: 'DN 32',  dn: 32,  int_d: 24.0 },
+      { pol: 'DN 40',  dn: 40,  int_d: 30.0 },
+      { pol: 'DN 50',  dn: 50,  int_d: 37.0 },
+      { pol: 'DN 63',  dn: 63,  int_d: 49.0 },
+      { pol: 'DN 75',  dn: 75,  int_d: 56.0 },
+      { pol: 'DN 90',  dn: 90,  int_d: 72.0 },
+      { pol: 'DN 110', dn: 110, int_d: 92.0 },
+      { pol: 'DN 125', dn: 125, int_d: 102.0 },
+      { pol: 'DN 140', dn: 140, int_d: 120.0 },
+      { pol: 'DN 160', dn: 160, int_d: 135.0 },
+      { pol: 'DN 200', dn: 200, int_d: 167.0 },
+      { pol: 'DN 250', dn: 250, int_d: 200.0 },
     ]
   },
   galv: {
